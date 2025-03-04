@@ -1,0 +1,125 @@
+import bcryptjs from 'bcryptjs';
+import User from './model.js';
+
+// Đăng ký
+export const signup = async (req, res) => {
+  const { username, password, confirmPassword, email, age } = req.body;
+
+  try {
+    if (!/^[a-zA-Z0-9]+$/.test(password)) {
+      return res.status(400).json({ errors: ["Mật khẩu chỉ được chứa chữ và số."] });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ errors: ["Mật khẩu và Xác nhận mật khẩu không khớp."] });
+    }
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ errors: ["Tên người dùng đã tồn tại, vui lòng chọn tên khác."] });
+    }
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ errors: ["Email đã được sử dụng, vui lòng chọn email khác."] });
+    }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      age,
+    });
+
+    res.status(201).json({ message: "Đăng ký thành công! Vui lòng đăng nhập." });
+  } catch (err) {
+    console.error("Lỗi trong quá trình đăng ký:", err);
+    if (err.code === 11000) {
+      let errorMsg = "Đã xảy ra lỗi, vui lòng thử lại.";
+      if (err.keyPattern.username) {
+        errorMsg = "Tên người dùng đã tồn tại, vui lòng chọn tên khác.";
+      } else if (err.keyPattern.email) {
+        errorMsg = "Email đã được sử dụng, vui lòng chọn email khác.";
+      }
+      return res.status(400).json({ errors: [errorMsg] });
+    }
+    res.status(500).json({ errors: ["Đã xảy ra lỗi, vui lòng thử lại sau."] });
+  }
+};
+// Đăng nhập
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Email không tồn tại." });
+    }
+
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Mật khẩu không chính xác." });
+    }
+
+    req.session.userId = user._id;
+    req.session.username = user.username;
+    req.session.role = user.role;
+
+    if (user.role === "admin") {
+      return res.json({ message: "Đăng nhập thành công với vai trò admin!", redirectUrl: "/admin/dashboard" });
+    } else if (user.role === "user") {
+      return res.json({ message: "Chào mừng bạn đến với cửa hàng Coffee House!", redirectUrl: "/home2" });
+    } else {
+      return res.status(403).json({ message: "Vai trò không hợp lệ." });
+    }
+  } catch (err) {
+    console.error("Lỗi trong quá trình đăng nhập:", err);
+    res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
+  }
+};
+// Thay đổi mật khẩu
+export const updatePassword = async (req, res) => {
+  const { oldPassword, password, confirmPassword } = req.body;
+
+  if (!req.user) {
+    return res.status(401).json({ message: "Bạn chưa đăng nhập." });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: "Mật khẩu mới và xác nhận mật khẩu không khớp." });
+  }
+
+  try {
+    const user = await User.findById(req.user._id);
+
+    const isOldPasswordValid = await bcryptjs.compare(oldPassword, user.password);
+    if (!isOldPasswordValid) {
+      return res.status(400).json({ message: "Mật khẩu cũ không chính xác." });
+    }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    await User.findByIdAndUpdate(req.user._id, { password: hashedPassword });
+
+    res.json({ message: "Cập nhật mật khẩu thành công!" });
+  } catch (error) {
+    console.error("Lỗi khi thay đổi mật khẩu:", error);
+    res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
+  }
+};
+// Đăng xuất
+export const logout = (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Lỗi khi xóa session:", err);
+        return res.status(500).json({ message: "Đã xảy ra lỗi khi đăng xuất." });
+      }
+      res.json({ message: "Bạn đã đăng xuất thành công!" });
+    });
+  } catch (error) {
+    console.error("Lỗi khi đăng xuất:", error);
+    res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
+  }
+};
