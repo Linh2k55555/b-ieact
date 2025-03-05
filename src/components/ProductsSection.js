@@ -1,26 +1,28 @@
-// src/components/ProductsSection.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const ProductsSection = () => {
   const [products, setProducts] = useState([]);
-  
+
+  // Fetch products when the component is mounted
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('/api/products');
-        setProducts(response.data);
+        // Update the URL to match your backend server's API
+        const response = await axios.get('http://localhost:8080/api/products'); // Adjusted to the correct URL
+        setProducts(response.data); // Set products if successful
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     fetchProducts();
-  }, []);
+  }, []); // Empty dependency array, so it runs only once when the component mounts
 
+  // Add product to the cart
   const addToCart = async (productId, price, name) => {
     try {
-      const response = await axios.post('/api/cart/add', { productId, price, name });
+      const response = await axios.post('http://localhost:8080/api/cart/add', { productId, price, name }); // Adjusted to the correct URL
       alert(response.data.message || "Thêm vào giỏ hàng thành công!");
     } catch (error) {
       alert("Lỗi khi thêm vào giỏ hàng. Vui lòng thử lại.");
@@ -34,6 +36,7 @@ const ProductsSection = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <div key={product._id} className="product-card">
+              {/* Assuming product.image is a base64 image string */}
               <img className="product-image" src={`data:image/jpeg;base64,${product.image}`} alt={product.name} />
               <div className="product-info">
                 <h3>{product.name}</h3>

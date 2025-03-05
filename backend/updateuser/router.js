@@ -1,10 +1,14 @@
+// router.js (Updated)
 import express from "express";
-import { renderUpdateUserPage, updateUser } from "./controller.js";
+import { getUserInfo, updateUser } from "./controller.js";
 import { isAuthenticated } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/update-user",isAuthenticated,  renderUpdateUserPage); // Hiển thị form cập nhật
-router.post("/update-user",isAuthenticated, updateUser); //cập nhật thông tin
+// Endpoint to fetch user info (GET)
+router.get("/user", isAuthenticated, getUserInfo); // Fetch user info
+
+// Endpoint to update user info (POST)
+router.post("/user/update", isAuthenticated, updateUser); // Update user info
 
 export default router;

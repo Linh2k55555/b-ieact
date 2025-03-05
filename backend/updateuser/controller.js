@@ -1,64 +1,57 @@
+// controller.js (Updated)
 import User from "../user/model.js";
-import bcryptjs from "bcryptjs";
 
-// Hiển thị trang đổi thông tin người dùng
-export const renderUpdateUserPage = async (req, res) => {
-    try {
-      // Kiểm tra xem người dùng đã đăng nhập hay chưa
-      if (!req.session.userId) {
-        return res.redirect("/signin");
-      }
-  
-      // Lấy thông tin người dùng từ cơ sở dữ liệu
-      const user = await User.findById(req.session.userId);
-      if (!user) {
-        return res.status(404).send("Không tìm thấy thông tin người dùng.");
-      }
-  
-      // Render trang cập nhật với thông tin người dùng
-      res.render("update-user", {
-        user, // Truyền thông tin người dùng vào view
-        errors: [],
-      });
-    } catch (error) {
-      console.error("Lỗi khi hiển thị trang cập nhật thông tin:", error);
-      res.status(500).send("Đã xảy ra lỗi, vui lòng thử lại sau.5");
+// Fetch user information
+export const getUserInfo = async (req, res) => {
+  try {
+    // Check if the user is logged in
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
-  };
-  
-  // Cập nhật thông tin người dùng
-  export const updateUser = async (req, res) => {
-    const { username, age } = req.body;
-  
-    try {
-      // Kiểm tra nếu không có thông tin người dùng trong session
-      if (!req.session || !req.session.userId) {
-        return res.status(401).send("Bạn chưa đăng nhập.");
-      }
-  
-      // Cập nhật thông tin người dùng trong MongoDB
-      const updatedUser = await User.findByIdAndUpdate(
-        req.session.userId,
-        { username, age },
-        { new: true }
-      );
-  
-      if (!updatedUser) {
-        return res.status(404).send("Không tìm thấy người dùng.");
-      }
-  
-      // Cập nhật lại session với thông tin mới
-      req.session.username = updatedUser.username;
-      req.session.age = updatedUser.age;
-  
-      // Quay lại trang home2 với thông báo
-      res.redirect("/home2?message=Cập nhật thông tin thành công!");
-    } catch (error) {
-      console.error("Lỗi khi cập nhật thông tin:", error);
-      res.status(500).render("update-user", {
-        user: req.session,
-        errors: ["Trùng thông tin vui lòng sửa lại."],
-      });
+
+    // Fetch the user from the database
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  };
-  
+
+    // Return the user data
+    res.json({ user });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update user information
+export const updateUser = async (req, res) => {
+  const { username, age } = req.body;
+
+  try {
+    // Check if user is authenticated
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Update user information
+    const updatedUser = await User.findByIdAndUpdate(
+      req.session.userId,
+      { username, age },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update session with the new data
+    req.session.username = updatedUser.username;
+    req.session.age = updatedUser.age;
+
+    // Respond with the updated user data
+    res.json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

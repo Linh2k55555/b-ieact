@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home1 from './pages/Home';
 import Home2 from './pages/home2.js'; 
-import Login from '../src/components/Login.js';// Đảm bảo tên này trùng với tên file home2.js
+import Login from '../src/components/Login.js';
 import './App.css';
 import Signup from './components/Signup.js';
 import UpdateUser from './components/UpdateUser';
+
 function App() {
+  // eslint-disable-next-line
+  const [userData, setUserData] = useState(null);
+  // eslint-disable-next-line
+  const [errorMessages, setErrorMessages] = useState([]);
+
   return (
     <Router>
       <Routes>

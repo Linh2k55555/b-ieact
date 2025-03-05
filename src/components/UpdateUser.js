@@ -1,72 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const UpdateUser = ({ user, errors }) => {
-  const [formData, setFormData] = useState({
-    username: user.username || '',
-    age: user.age || '',
-  });
+const UpdateUser = () => {
+  const [formData, setFormData] = useState({ username: "", age: "" });
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  // Fetch user information from the API
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/user", {
+          withCredentials: true, // Ensure to send cookies with the request
+        });
+        setFormData({
+          username: response.data.user.username,
+          age: response.data.user.age,
+        });
+        setLoading(false);
+      } catch (error) {
+        setMessage("Lỗi khi lấy thông tin người dùng.");
+        setLoading(false);
+      }
+    };
 
-  const handleSubmit = (e) => {
+    fetchUserInfo();
+  }, []);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic to handle form submission goes here (e.g., API call to update user)
-    console.log('Form submitted', formData);
+
+    try {
+      await axios.post(
+        "http://localhost:8080/api/user/update",
+        formData,
+        { withCredentials: true }
+      );
+      setMessage("Cập nhật thông tin thành công!");
+    } catch (error) {
+      setMessage("Lỗi khi cập nhật thông tin.");
+    }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="container">
-      <h1>Cập nhật thông tin</h1>
-      
-      {errors && errors.length > 0 && (
-        <div className="errors">
-          <ul>
-            {errors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
+    <div>
+      <h2>Cập nhật thông tin người dùng</h2>
       <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <i className="fas fa-user"></i>
+        <div>
+          <label>Tên người dùng:</label>
           <input
             type="text"
-            id="username"
-            name="username"
             value={formData.username}
-            onChange={handleChange}
-            placeholder="Tên người dùng"
-            required
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
           />
         </div>
-      
-        <div className="input-group">
-          <i className="fas fa-calendar"></i>
+        <div>
+          <label>Tuổi:</label>
           <input
             type="number"
-            id="age"
-            name="age"
             value={formData.age}
-            onChange={handleChange}
-            placeholder="Tuổi"
-            required
+            onChange={(e) => setFormData({ ...formData, age: e.target.value })}
           />
         </div>
-      
-        <button type="submit">Cập nhật thông tin</button>
+        <button type="submit">Cập nhật</button>
       </form>
-      
-      <div className="extra-links">
-        <p><a href="/home2">Quay lại trang chủ</a></p>
-      </div>
+      {message && <p>{message}</p>}
     </div>
   );
 };
