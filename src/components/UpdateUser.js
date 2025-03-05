@@ -10,7 +10,11 @@ const UpdateUser = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
+        const token = localStorage.getItem("authToken"); // Get the token from local storage or any other storage
         const response = await axios.get("http://localhost:8080/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request headers
+          },
           withCredentials: true, // Ensure to send cookies with the request
         });
         setFormData({
@@ -32,10 +36,16 @@ const UpdateUser = () => {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem("authToken"); // Get the token from local storage or any other storage
       await axios.post(
         "http://localhost:8080/api/user/update",
         formData,
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request headers
+          },
+          withCredentials: true,
+        }
       );
       setMessage("Cập nhật thông tin thành công!");
     } catch (error) {

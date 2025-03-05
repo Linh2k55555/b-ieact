@@ -58,7 +58,7 @@ connectDB(process.env.DB_URI);
 app.use("/api", authRouter); // Người dùng
 app.use("/api", productRouter); // Sản phẩm
 app.use("/", logoutRouter); // Đăng xuất
-app.use("/user", updateUserRouter); // Cập nhật thông tin người dùng
+app.use("/api", updateUserRouter); // Cập nhật thông tin người dùng
 app.use("/admin", adminRouter); // Quản trị viên
 app.use("/api/cart", cartRouter); // Giỏ hàng
 app.use('/transactions', transactionRoutes); // Lịch sử giao dịch
@@ -66,25 +66,39 @@ app.use('/checkout/guest', checkoutGuestRoutes); // Thanh toán khách hàng ch�
 app.use('/guest-cart', guestCartRouter); // Giỏ hàng khách hàng chưa đăng nhập
 app.use("/", forgotPasswordRouter); // Quên mật khẩu
 
-// Đăng ký
-app.get("/signup", (req, res) => {
-    res.render("signup", { errors: [] });
-});
+// // Đăng ký
+// app.get("/signup", (req, res) => {
+//     res.render("signup", { errors: [] });
+// });
 
-// Đăng nhập (POST) - xử lý đăng nhập từ frontend
-app.post("/api/signin", async (req, res) => {
-    const { email, password } = req.body;
+// // Đăng nhập (POST) - xử lý đăng nhập từ frontend
+// app.post("/api/signin", async (req, res) => {
+//     const { email, password } = req.body;
 
-    // Kiểm tra email và password (ví dụ: bạn cần truy vấn database để xác thực người dùng)
-    if (email === "admin@example.com" && password === "123456") {
-        // Lưu thông tin người dùng vào session
-        req.session.user = { email };
-        return res.json({ success: true, message: "Đăng nhập thành công!" });
-    } else {
-        // Trả về lỗi nếu email hoặc password không đúng
-        return res.json({ success: false, message: "Email hoặc mật khẩu không đúng!" });
-    }
-});
+//     // Kiểm tra email và password (ví dụ: bạn cần truy vấn database để xác thực người dùng)
+//     if (email === "admin@example.com" && password === "123456") {
+//         // Lưu thông tin người dùng vào session
+//         req.session.user = { email };
+//         return res.json({ success: true, message: "Đăng nhập thành công!" });
+//     } else {
+//         // Trả về lỗi nếu email hoặc password không đúng
+//         return res.json({ success: false, message: "Email hoặc mật khẩu không đúng!" });
+//     }
+// });
+app.use(session({
+    secret: process.env.SESSION_SECRET || "defaultSecretKey",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false, // Set to true if using HTTPS
+        httpOnly: true,  // Ensures the cookie is sent only over HTTP(S)
+        maxAge: 1000 * 60 * 60 * 24 // 1 day expiration
+    },
+    store: MongoStore.create({
+        mongoUrl: process.env.DB_URI,
+        collectionName: "sessions",
+    }),
+}));
 
 // Trang home (nếu có)
 app.use("/", homeRouter);

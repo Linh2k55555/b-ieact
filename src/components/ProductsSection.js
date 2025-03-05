@@ -8,13 +8,15 @@ const ProductsSection = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // Update the URL to match your backend server's API
-        const response = await axios.get('http://localhost:8080/api/products'); // Adjusted to the correct URL
-        setProducts(response.data); // Set products if successful
+        const response = await axios.get("http://localhost:8080/api/products", {
+          withCredentials: true,  // Add this to send cookies along with the request
+        });
+        setProducts(response.data);  // Update the state with fetched products
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
+    
 
     fetchProducts();
   }, []); // Empty dependency array, so it runs only once when the component mounts

@@ -1,21 +1,17 @@
-// controller.js (Updated)
-import User from "../user/model.js";
 
-// Fetch user information
+import User from "../user/model.js";
 export const getUserInfo = async (req, res) => {
   try {
-    // Check if the user is logged in
     if (!req.session.userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Fetch the user from the database
+    // Fetch user details based on the session userId
     const user = await User.findById(req.session.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Return the user data
     res.json({ user });
   } catch (error) {
     console.error("Error fetching user:", error);
