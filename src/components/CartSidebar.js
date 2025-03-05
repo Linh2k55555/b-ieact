@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../css/CartSidebar.css';
 
 const CartSidebar = () => {
   const [cart, setCart] = useState({ items: [] });

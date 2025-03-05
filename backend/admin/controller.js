@@ -18,7 +18,7 @@ export const addProduct = async (req, res) => {
         const newProduct = new Product({ name, price, description, image });
         await newProduct.save();
 
-        res.redirect("/admin/products?message=Sản phẩm đã được thêm thành công!");
+        res.redirect("/admin/manage-products?message=Sản phẩm đã được thêm thành công!");
     } catch (error) {
         console.error("Lỗi khi thêm sản phẩm:", error);
         res.status(500).send("Lỗi khi thêm sản phẩm.");
@@ -44,7 +44,7 @@ export const updateProduct = async (req, res) => {
             ...(req.file && { image: imageBase64 }), // Chỉ cập nhật ảnh nếu có file mới
         });
 
-        res.redirect("/admin/products?message=Sản phẩm đã được cập nhật!");
+        res.redirect("/admin/manage-products?message=Sản phẩm đã được cập nhật!");
     } catch (error) {
         console.error("Lỗi khi cập nhật sản phẩm:", error);
         res.status(500).send("Đã xảy ra lỗi khi cập nhật sản phẩm.");
@@ -57,19 +57,23 @@ export const deleteProduct = async (req, res) => {
     try {
         const { id } = req.params;
         await Product.findByIdAndDelete(id);
-        res.redirect("/admin/products?message=Sản phẩm đã được xóa!");
+        res.redirect("/admin/manage-products?message=Sản phẩm đã được xóa!");
     } catch (error) {
         console.error("Lỗi khi xóa sản phẩm:", error);
         res.status(500).send("Đã xảy ra lỗi khi xóa sản phẩm.");
     }
-};
-// Lấy danh sách đơn hàng cho Admin
+};// Lấy danh sách đơn hàng cho Admin (sử dụng API trả về dữ liệu JSON)
 export const getAdminOrders = async (req, res) => {
     try {
-        const transactions = await Transaction.find().populate('userId', 'email').sort({ createdAt: -1 });
-        res.render('admin-orders', { transactions });
+        // Fetch transactions from the database
+        const transactions = await Transaction.find()
+            .populate('userId', 'email')
+            .sort({ createdAt: -1 });
+
+        // Send the transactions data as JSON
+        res.json({ transactions });
     } catch (error) {
         console.error('Lỗi khi lấy danh sách đơn hàng:', error);
-        res.status(500).send("Đã xảy ra lỗi, vui lòng thử lại sau.");
+        res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
     }
 };
