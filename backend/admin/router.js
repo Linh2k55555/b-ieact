@@ -24,8 +24,15 @@ router.post("/products/:id", isAdmin, upload.single("image"), updateProduct);
 
 // Route: Xóa sản phẩm
 router.get("/products/delete/:id", isAdmin, deleteProduct);
+router.get("/products", isAdmin, async (req, res) => {
+    try {
+        const products = await Product.find(); // Lấy tất cả sản phẩm
+        res.render("admin-products", { products });
+    } catch (error) {
+        console.error("Lỗi khi lấy sản phẩm:", error);
+        res.status(500).send("Đã xảy ra lỗi khi lấy sản phẩm.");
+    }
+});
 
-// Route để xem danh sách đơn hàng
-router.get('/orders', getAdminOrders);
 
 export default router;

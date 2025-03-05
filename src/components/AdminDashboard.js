@@ -1,30 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Hook dùng để chuyển hướng người dùng
+import { Link } from 'react-router-dom';  // Import the Link component from react-router-dom
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Gọi API để lấy danh sách sản phẩm
+    // Fetch data using 'fetch'
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products', { withCredentials: true });
-        
-        // Kiểm tra nếu dữ liệu trả về không phải là mảng hợp lệ
-        if (Array.isArray(response.data.products)) {
-          setProducts(response.data.products);
+        const response = await fetch('http://localhost:8080/api/products', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',  // Ensure cookies are sent with the request (if needed)
+        });
+
+        const data = await response.json();  // Parse the response to JSON
+        console.log(data);  // For debugging
+
+        if (Array.isArray(data.products)) {
+          setProducts(data.products);  // Set the products data to state
         } else {
           setMessage('Không có sản phẩm nào được tìm thấy.');
         }
-        setLoading(false);
       } catch (error) {
-        console.error("Error fetching products:", error);
-        setMessage("Không thể tải danh sách sản phẩm.");
-        setLoading(false);
+        console.error('Error fetching products:', error);
+        setMessage('Không thể tải danh sách sản phẩm.');
+      } finally {
+        setLoading(false);  // Ensure loading is set to false after fetching data
       }
     };
 
@@ -33,14 +39,13 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get('/logout', { withCredentials: true });
+      const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
       if (response.status === 200) {
-        navigate('/');  // Chuyển hướng về trang đăng nhập
-        alert("Đăng xuất thành công!");
+        alert('Đăng xuất thành công!');
       }
     } catch (error) {
       console.error('Error during logout', error);
-      alert("Có lỗi xảy ra trong khi đăng xuất!");
+      alert('Có lỗi xảy ra trong khi đăng xuất!');
     }
   };
 
@@ -50,8 +55,8 @@ const AdminDashboard = () => {
         <h1 style={{ color: '#e6b17e', fontFamily: 'Playfair Display', fontSize: '2.2rem' }}>Quản lý sản phẩm</h1>
         <div className="action-buttons">
           <button onClick={handleLogout} style={buttonStyles}>Đăng xuất</button>
-          <button style={buttonStyles}>Quản lý sản phẩm</button>
-          <button style={buttonStyles}>Quản lý đơn hàng</button>
+          <Link to="/admin/manage-products" style={buttonStyles}>Quản lý sản phẩm</Link>
+          <Link to="/admin/order" style={buttonStyles}>Quản lý đơn hàng</Link>
         </div>
       </header>
 
@@ -61,11 +66,15 @@ const AdminDashboard = () => {
 
         {loading ? (
           <p>Đang tải sản phẩm...</p>
-        ) : products && products.length > 0 ? (
+        ) : (Array.isArray(products) && products.length > 0 ? (
           products.map((product) => (
             <div key={product._id} className="product" style={productStyles}>
               {product.image ? (
-                <img src={`data:image/jpeg;base64,${product.image}`} alt={product.name} style={imageStyles} />
+                <img 
+                  src={`http://localhost:8080${product.image}`} 
+                  alt={product.name} 
+                  style={imageStyles} 
+                />
               ) : (
                 <p>Không có hình ảnh.</p>
               )}
@@ -78,7 +87,7 @@ const AdminDashboard = () => {
           ))
         ) : (
           <p>Không có sản phẩm nào được tìm thấy.</p>
-        )}
+        ))}
       </div>
     </div>
   );
@@ -91,6 +100,7 @@ const buttonStyles = {
   borderRadius: '25px',
   marginLeft: '10px',
   cursor: 'pointer',
+  textDecoration: 'none',  // Ensure the Link component doesn't have default underline
 };
 
 const productStyles = {

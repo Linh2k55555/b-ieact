@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Navbar.css';
+
 const Navbar = () => {
   return (
     <nav className="navbar">
@@ -11,7 +12,9 @@ const Navbar = () => {
           <a href="#menu">Menu</a>
           <Link to="/signin" className="auth-btn">Đăng nhập</Link>
           <Link to="/signup" className="auth-btn">Đăng ký</Link>
-          <a href="#" id="cart-toggle"><i className="fas fa-shopping-cart"></i></a>
+          <button id="cart-toggle" className="cart-button">
+            <i className="fas fa-shopping-cart"></i>
+          </button>
         </div>
       </div>
     </nav>

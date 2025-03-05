@@ -24,9 +24,9 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Theo dõi chúng tôi</h4>
           <div className="social-links">
-            <a href="#"><i className="fab fa-facebook"></i></a>
-            <a href="#"><i className="fab fa-instagram"></i></a>
-            <a href="#"><i className="fab fa-twitter"></i></a>
+            <a href="https://www.facebook.com"><i className="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com"><i className="fab fa-instagram"></i></a>
+            <a href="https://www.twitter.com"><i className="fab fa-twitter"></i></a>
           </div>
         </div>
       </div>

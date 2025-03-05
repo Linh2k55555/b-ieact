@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const ManageProducts = () => {
   const [products, setProducts] = useState([]);
@@ -10,20 +11,13 @@ const ManageProducts = () => {
     fetchProducts();
   }, []);
 
-  // Sử dụng fetch để lấy sản phẩm từ API
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/products', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',  // Gửi cookies cùng với yêu cầu
-      });
-      const data = await response.json();
-      console.log(data);
-      if (Array.isArray(data.products)) {
-        setProducts(data.products);
+      const response = await axios.get('http://localhost:8080/api/products', { withCredentials: true });
+      console.log(response.data);  // Thêm log để kiểm tra cấu trúc dữ liệu trả về
+
+      if (Array.isArray(response.data.products)) {
+        setProducts(response.data.products);
       } else {
         setMessage('Không có sản phẩm nào được tìm thấy.');
       }
@@ -34,61 +28,41 @@ const ManageProducts = () => {
       setLoading(false);
     }
   };
-  
-  // Hàm thêm sản phẩm
+
   const handleAddProduct = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
     try {
-      const response = await fetch('http://localhost:8080/admin/products', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',  // Đảm bảo gửi cookie cùng với yêu cầu
-      });
-
-      const result = await response.json();
-      setMessage(result.message);
-      fetchProducts(); // Tải lại danh sách sản phẩm
+      const response = await axios.post('http://localhost:8080/admin/products', formData, { withCredentials: true });
+      setMessage(response.data.message);  // Thông báo từ backend
+      fetchProducts();  // Tải lại danh sách sản phẩm
     } catch (error) {
       console.error("Error adding product:", error);
       setMessage("Lỗi khi thêm sản phẩm.");
     }
   };
 
-  // Hàm cập nhật sản phẩm
   const handleUpdateProduct = async (e, productId) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
     try {
-      const response = await fetch(`http://localhost:8080/admin/products/${productId}`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',  // Đảm bảo gửi cookie cùng với yêu cầu
-      });
-
-      const result = await response.json();
-      setMessage(result.message);
+      const response = await axios.post(`http://localhost:8080/admin/products/${productId}`, formData, { withCredentials: true });
+      setMessage(response.data.message);
       setEditProduct(null);
-      fetchProducts(); // Tải lại danh sách sản phẩm
+      fetchProducts();
     } catch (error) {
       console.error("Error updating product:", error);
       setMessage("Lỗi khi cập nhật sản phẩm.");
     }
   };
 
-  // Hàm xóa sản phẩm
   const handleDeleteProduct = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:8080/admin/products/delete/${productId}`, {
-        method: 'GET',
-        credentials: 'include',  // Đảm bảo gửi cookie cùng với yêu cầu
-      });
-
-      const result = await response.json();
-      setMessage(result.message);
-      fetchProducts(); // Tải lại danh sách sản phẩm
+      const response = await axios.get(`http://localhost:8080/admin/products/delete/${productId}`, { withCredentials: true });
+      setMessage(response.data.message);
+      fetchProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
       setMessage("Lỗi khi xóa sản phẩm.");

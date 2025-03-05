@@ -8,6 +8,7 @@ import Signup from './components/Signup.js';
 import UpdateUser from './components/UpdateUser';
 import UpdatePassword from './components/UpdatePassword.js';
 import AdminDashboard from './components/AdminDashboard.js';
+import ManageProducts from './components/manageproducts';
 function App() {
   // eslint-disable-next-line
   const [userData, setUserData] = useState(null);
@@ -24,6 +25,7 @@ function App() {
         <Route path="/user/update-user" element={<UpdateUser user={userData} errors={errorMessages} />} />
         <Route path="/update-password" element={<UpdatePassword errors={errorMessages} />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/manage-products" element={<ManageProducts />} />
       </Routes>
     </Router>
   );
