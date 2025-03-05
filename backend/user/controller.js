@@ -47,7 +47,9 @@ export const signup = async (req, res) => {
     }
     res.status(500).json({ errors: ["Đã xảy ra lỗi, vui lòng thử lại sau."] });
   }
+  
 };
+
 export const signin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,18 +64,19 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu không chính xác." });
     }
 
-    // Set session data
+    // Thiết lập session sau khi đăng nhập thành công
     req.session.userId = user._id;
     req.session.username = user.username;
     req.session.role = user.role;
 
-    console.log('Session after login:', req.session);
+    console.log('Session after login:', req.session); // Kiểm tra lại session
 
     if (user.role === 'admin') {
       return res.json({ message: "Đăng nhập thành công với vai trò admin!", redirectUrl: "/admin/dashboard" });
     } else if (user.role === 'user') {
       return res.json({ message: "Chào mừng bạn đến với cửa hàng Coffee House!", redirectUrl: "/home2" });
-    } else {
+    }
+    else {
       return res.status(403).json({ message: "Vai trò không hợp lệ." });
     }
   } catch (err) {
@@ -81,30 +84,40 @@ export const signin = async (req, res) => {
     res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
   }
 };
-
 // Thay đổi mật khẩu
 export const updatePassword = async (req, res) => {
   const { oldPassword, password, confirmPassword } = req.body;
 
+  // Kiểm tra xem người dùng đã đăng nhập chưa
   if (!req.user) {
     return res.status(401).json({ message: "Bạn chưa đăng nhập." });
   }
 
+  // Kiểm tra mật khẩu mới và xác nhận mật khẩu có khớp không
   if (password !== confirmPassword) {
     return res.status(400).json({ message: "Mật khẩu mới và xác nhận mật khẩu không khớp." });
   }
 
   try {
+    // Lấy thông tin người dùng từ cơ sở dữ liệu
     const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng." });
+    }
 
+    // Kiểm tra mật khẩu cũ
     const isOldPasswordValid = await bcryptjs.compare(oldPassword, user.password);
     if (!isOldPasswordValid) {
       return res.status(400).json({ message: "Mật khẩu cũ không chính xác." });
     }
 
+    // Mã hóa mật khẩu mới
     const hashedPassword = await bcryptjs.hash(password, 10);
+
+    // Cập nhật mật khẩu trong cơ sở dữ liệu
     await User.findByIdAndUpdate(req.user._id, { password: hashedPassword });
 
+    // Trả về thông báo thành công
     res.json({ message: "Cập nhật mật khẩu thành công!" });
   } catch (error) {
     console.error("Lỗi khi thay đổi mật khẩu:", error);

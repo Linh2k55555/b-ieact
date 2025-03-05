@@ -38,9 +38,13 @@ const Navbar = () => {
             <Link to="/home2" className="nav-link">Trang chủ</Link>
             <Link to="#menu" className="nav-link">Menu</Link>
             <div className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" onClick={toggleDropdown} role="button" data-bs-toggle="dropdown" aria-expanded={dropdownOpen}>
+              <button
+                className="nav-link dropdown-toggle"
+                onClick={toggleDropdown}
+                aria-expanded={dropdownOpen}
+              >
                 <i className="bi bi-person"></i> {/* User icon */}
-              </a>
+              </button>
               <ul className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
                 <Link className="dropdown-item" to="/update-password">Đổi mật khẩu</Link>
                 <Link className="dropdown-item" to="/user/update-user">Đổi thông tin</Link>
@@ -49,7 +53,13 @@ const Navbar = () => {
                 <button className="dropdown-item" onClick={handleLogout}>Đăng xuất</button> {/* Đăng xuất khi nhấn */}
               </ul>
             </div>
-            <a href="#" id="cart-toggle" className="nav-link"><i className="fas fa-shopping-cart"></i></a> {/* Cart icon */}
+            <button
+              id="cart-toggle"
+              className="nav-link"
+              onClick={() => console.log('Open cart functionality')}
+            >
+              <i className="fas fa-shopping-cart"></i>
+            </button> {/* Cart icon */}
           </div>
         </div>
       </div>

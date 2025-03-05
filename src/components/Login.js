@@ -7,38 +7,41 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
   // Hàm xử lý khi người dùng submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');  // Reset message before sending the request
-
+    setMessage('');  // Reset message trước khi gửi yêu cầu
+  
+    console.log("Gửi yêu cầu tới: http://localhost:8080/api/signin", { email, password });  // Debug thông tin
+  
     try {
-      const response = await axios.post('http://localhost:8080/api/signin', { email, password });
-
-      // Kiểm tra xem có trả về thông báo thành công không
+      // Gửi yêu cầu đăng nhập với withCredentials: true để gửi session cookie
+      const response = await axios.post('http://localhost:8080/api/signin', { email, password }, { withCredentials: true });
+      
+      // Kiểm tra phản hồi từ backend
+      console.log(response.data);
+      // Xử lý phản hồi từ backend
       if (response.data.message) {
         setMessage(response.data.message);
         if (response.data.redirectUrl) {
-          // Chuyển hướng nếu có URL trả về từ backend
-          window.location.href = response.data.redirectUrl;
+          window.location.href = response.data.redirectUrl;  // Chuyển hướng nếu có URL trả về từ backend
         }
       } else {
         setMessage('Đăng nhập thất bại');
       }
     } catch (error) {
+      // Kiểm tra lỗi
       if (error.response) {
-        // Nếu có phản hồi từ server
         setMessage(error.response.data.message || 'Lỗi khi kết nối đến server');
       } else if (error.request) {
-        // Nếu không có phản hồi, nhưng đã gửi yêu cầu
         setMessage('Không thể kết nối đến máy chủ');
       } else {
-        // Lỗi khác trong quá trình xử lý yêu cầu
         setMessage('Lỗi khi gửi yêu cầu');
       }
     } finally {
-      setLoading(false);  // Tắt loading khi hoàn tất
+      setLoading(false);
     }
   };
 

@@ -1,12 +1,12 @@
-
+import express from "express";
 import User from "../user/model.js";
 export const getUserInfo = async (req, res) => {
   try {
+    console.log("Session data:", req.session); // Check if session data exists
     if (!req.session.userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Fetch user details based on the session userId
     const user = await User.findById(req.session.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -18,36 +18,29 @@ export const getUserInfo = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-// Update user information
 export const updateUser = async (req, res) => {
-  const { username, age } = req.body;
-
+  const { username, email, age } = req.body;
+  
   try {
-    // Check if user is authenticated
-    if (!req.session.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    // Giả sử bạn đã kiểm tra và lấy người dùng qua session
+    const user = await User.findById(req.user._id);  // Lấy thông tin người dùng từ session
+    
+    // Cập nhật thông tin người dùng
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.age = age || user.age;
 
-    // Update user information
-    const updatedUser = await User.findByIdAndUpdate(
-      req.session.userId,
-      { username, age },
-      { new: true }
-    );
+    // Lưu thay đổi vào cơ sở dữ liệu
+    await user.save();
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // Trả về phản hồi thành công
+    res.json({
+      message: "Cập nhật thông tin thành công!", 
+      redirectUrl: "/home2" // Trang bạn muốn chuyển hướng sau khi cập nhật
+    });
 
-    // Update session with the new data
-    req.session.username = updatedUser.username;
-    req.session.age = updatedUser.age;
-
-    // Respond with the updated user data
-    res.json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Lỗi khi cập nhật thông tin người dùng:", error);
+    res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
   }
 };

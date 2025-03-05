@@ -10,12 +10,8 @@ const UpdateUser = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem("authToken"); // Get the token from local storage or any other storage
         const response = await axios.get("http://localhost:8080/api/user", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request headers
-          },
-          withCredentials: true, // Ensure to send cookies with the request
+          withCredentials: true, // Đảm bảo gửi cookies với yêu cầu
         });
         setFormData({
           username: response.data.user.username,
@@ -34,20 +30,21 @@ const UpdateUser = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); // Reset message trước khi gửi yêu cầu
 
     try {
-      const token = localStorage.getItem("authToken"); // Get the token from local storage or any other storage
       await axios.post(
         "http://localhost:8080/api/user/update",
         formData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the request headers
-          },
-          withCredentials: true,
+          withCredentials: true, // Đảm bảo gửi cookies với yêu cầu
         }
       );
       setMessage("Cập nhật thông tin thành công!");
+      setTimeout(() => {
+        // Sau khi cập nhật thành công, chuyển hướng về trang chủ hoặc trang hồ sơ
+        window.location.href = "/home2";  // Hoặc bạn có thể thay đổi URL tùy ý
+      }, 2000); // Chờ 2 giây trước khi chuyển hướng
     } catch (error) {
       setMessage("Lỗi khi cập nhật thông tin.");
     }
@@ -69,6 +66,7 @@ const UpdateUser = () => {
             onChange={(e) =>
               setFormData({ ...formData, username: e.target.value })
             }
+            required
           />
         </div>
         <div>
@@ -77,10 +75,14 @@ const UpdateUser = () => {
             type="number"
             value={formData.age}
             onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+            required
           />
         </div>
-        <button type="submit">Cập nhật</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Đang cập nhật..." : "Cập nhật"}
+        </button>
       </form>
+
       {message && <p>{message}</p>}
     </div>
   );

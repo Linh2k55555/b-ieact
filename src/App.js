@@ -6,6 +6,7 @@ import Login from '../src/components/Login.js';
 import './App.css';
 import Signup from './components/Signup.js';
 import UpdateUser from './components/UpdateUser';
+import UpdatePassword from './components/UpdatePassword.js';
 
 function App() {
   // eslint-disable-next-line
@@ -21,6 +22,7 @@ function App() {
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/user/update-user" element={<UpdateUser user={userData} errors={errorMessages} />} />
+        <Route path="/update-password" element={<UpdatePassword errors={errorMessages} />} />
       </Routes>
     </Router>
   );
