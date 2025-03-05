@@ -24,7 +24,8 @@ router.post("/products", isAdmin, upload.single("image"), addProduct);
 router.post("/products/:id", isAdmin, upload.single("image"), updateProduct);
 
 // Route: Xóa sản phẩm
-router.get("/products/delete/:id", isAdmin, deleteProduct);
+router.delete("/products/delete/:id", isAdmin, deleteProduct);
+
 router.get("/products", isAdmin, async (req, res) => {
     try {
       const products = await Product.find(); // Lấy tất cả sản phẩm

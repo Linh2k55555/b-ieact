@@ -17,6 +17,7 @@ import checkoutGuestRoutes from './guest/routercheckout.js';
 import guestCartRouter from './guest/routerCart.js';
 import forgotPasswordRouter from "./forgotpassword/router.js";
 import cors from 'cors';  // Cài đặt CORS
+import xlsx from "xlsx";
 
 dotenv.config();
 
@@ -71,6 +72,63 @@ app.use("/", homeRouter);
 
 // Cấu hình serve các file tĩnh (frontend React)
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+//aapi tỉnh thành
+// Đọc dữ liệu từ file Excel
+const filePath = "diachi.xlsx"; // Đảm bảo file này nằm trong thư mục của server
+const workbook = xlsx.readFile(filePath);
+const sheetName = workbook.SheetNames[0];
+const sheetData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+// Chuẩn hóa danh sách tỉnh/thành phố
+const cities = [];
+const districts = [];
+const wards = [];
+
+sheetData.forEach((row, index) => {
+  let city = cities.find(c => c.name === row["Tỉnh / Thành Phố"]);
+  if (!city) {
+    city = {
+      id: cities.length + 1,
+      name: row["Tỉnh / Thành Phố"],
+    };
+    cities.push(city);
+  }
+
+  let district = districts.find(d => d.name === row["Quận Huyện"] && d.cityId === city.id);
+  if (!district) {
+    district = {
+      id: districts.length + 1,
+      name: row["Quận Huyện"],
+      cityId: city.id,
+    };
+    districts.push(district);
+  }
+
+  wards.push({
+    id: wards.length + 1,
+    name: row["Tên"],
+    districtId: district.id,
+  });
+});
+
+// API lấy danh sách tỉnh/thành phố
+app.get("/api/cities", (req, res) => {
+  res.json(cities);
+});
+
+// API lấy danh sách quận/huyện theo cityId
+app.get("/api/districts/:cityId", (req, res) => {
+  const cityId = parseInt(req.params.cityId);
+  const filteredDistricts = districts.filter(d => d.cityId === cityId);
+
+  if (filteredDistricts.length === 0) {
+    return res.status(404).json({ message: "Không tìm thấy quận/huyện nào cho tỉnh/thành phố này" });
+  }
+
+  res.json(filteredDistricts);
+});
 
 // Khởi chạy server
 const PORT = process.env.PORT || 8080;

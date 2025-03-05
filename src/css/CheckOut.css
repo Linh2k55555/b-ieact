@@ -1,0 +1,213 @@
+:root {
+    --primary-color: #c17f59;
+    --secondary-color: #8b573c;
+    --bg-dark: #2c1306;
+    --text-light: #e6b17e;
+    --success: #28a745;
+    --error: #dc3545;
+  }
+  
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+    color: #2c1810;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
+  header {
+    background-color: var(--bg-dark);
+    width: 100%;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-light);
+    font-family: "Playfair Display", serif;
+    text-align: center;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  h2 {
+    color: var(--primary-color);
+    font-family: "Playfair Display", serif;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2c1810;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #2c1810;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(193, 127, 89, 0.2);
+  }
+  
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .payment-method {
+    background: #f8f9fa;
+    padding: 1.2rem;
+    border-radius: 8px;
+    border: 1px solid #e1e1e1;
+  }
+  
+  .payment-method label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .payment-method label:hover {
+    background: rgba(193, 127, 89, 0.1);
+    border-radius: 4px;
+  }
+  
+  input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+    accent-color: var(--primary-color);
+  }
+  
+  .total-container {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    margin: 1.5rem 0;
+    border: 2px solid var(--primary-color);
+  }
+  
+  .total-container p {
+    font-size: 1.2rem;
+    color: #2c1810;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .total-amount {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+  }
+  
+  button {
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  button:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  
+    .row {
+      grid-template-columns: 1fr;
+    }
+  
+    header h1 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  /* Error States */
+  .error {
+    color: var(--error);
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+  
+  input.error,
+  select.error {
+    border-color: var(--error);
+  }
+  
+  /* Success States */
+  .success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Loading State */
+  button.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  /* Custom Select Styling */
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%232c1810' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  

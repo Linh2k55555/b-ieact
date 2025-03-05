@@ -11,7 +11,7 @@ const Logout = () => {
 
       // Sau 2 giây, chuyển hướng về trang đăng nhập
       setTimeout(() => {
-        window.location.href = '/signin'; // Điều hướng đến trang đăng nhập
+        window.location.href = '/'; // Điều hướng đến trang đăng nhập
       }, 2000); // Chờ 2 giây để người dùng đọc thông báo trước khi chuyển hướng
     } catch (error) {
       setMessage('Đã xảy ra lỗi khi đăng xuất. Vui lòng thử lại.');

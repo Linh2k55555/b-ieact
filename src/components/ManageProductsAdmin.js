@@ -114,7 +114,8 @@ const ManageProductsAdmin = () => {
 
   // Handle delete product
   const handleDelete = async (productId) => {
-    if (window.confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+    const confirmDelete = window.confirm('Bạn có chắc muốn xóa sản phẩm này?');
+    if (confirmDelete) {
       try {
         const response = await fetch(`http://localhost:8080/admin/products/delete/${productId}`, {
           method: 'DELETE',
@@ -122,46 +123,18 @@ const ManageProductsAdmin = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to delete product');
+          throw new Error('Không thể xóa sản phẩm');
         }
 
-        // Remove product from list after deletion
-        setProducts((prev) => prev.filter((product) => product._id !== productId));
-        setMessage('Sản phẩm đã được xóa thành công!');
+        const data = await response.json();
+        alert(data.message); // Hiển thị thông báo thành công
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product._id !== productId) // Xóa sản phẩm khỏi danh sách
+        );
       } catch (error) {
         console.error('Error deleting product:', error);
-        setMessage('Không thể xóa sản phẩm.');
+        alert('Có lỗi khi xóa sản phẩm!');
       }
-    }
-  };
-
-  // Handle edit product
-  const handleEdit = async (productId, updatedProduct) => {
-    const formData = new FormData();
-    formData.append('name', updatedProduct.name);
-    formData.append('price', updatedProduct.price);
-    formData.append('description', updatedProduct.description);
-    formData.append('image', updatedProduct.image);
-
-    try {
-      const response = await fetch(`http://localhost:8080/admin/products/${productId}`, {
-        method: 'PUT',
-        body: formData,
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to edit product');
-      }
-
-      const data = await response.json();
-      setMessage('Sản phẩm đã được cập nhật thành công!');
-      setProducts((prev) =>
-        prev.map((product) => (product._id === productId ? data.product : product))
-      );
-    } catch (error) {
-      console.error('Error editing product:', error);
-      setMessage('Không thể sửa sản phẩm.');
     }
   };
 
@@ -177,10 +150,9 @@ const ManageProductsAdmin = () => {
       </header>
 
       <div className="container">
-        {/* Display message if there is an error or no products */}
         {message && <p className="message">{message}</p>}
 
-        {/* Add new product form */}
+        {/* Form Thêm sản phẩm */}
         <div className="form-container">
           <h2>Thêm sản phẩm mới</h2>
           <form onSubmit={handleSubmit}>
@@ -229,7 +201,6 @@ const ManageProductsAdmin = () => {
 
         <h2>Danh sách sản phẩm</h2>
 
-        {/* Show loading state while fetching data */}
         {loading ? (
           <p className="loading">Đang tải sản phẩm...</p>
         ) : (
@@ -254,13 +225,7 @@ const ManageProductsAdmin = () => {
                 </div>
 
                 <div className="action-buttons">
-                  <button onClick={() => handleEdit(product._id, product)} className="btn-edit">
-                    <i className="fas fa-edit"></i> Sửa
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="btn-delete"
-                  >
+                  <button onClick={() => handleDelete(product._id)} className="btn-delete">
                     <i className="fas fa-trash"></i> Xóa
                   </button>
                 </div>

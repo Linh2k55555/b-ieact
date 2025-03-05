@@ -52,17 +52,24 @@ export const updateProduct = async (req, res) => {
 };
 
 
-// Xử lý xóa sản phẩm
-export const deleteProduct = async (req, res) => {
+ export const deleteProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        await Product.findByIdAndDelete(id);
-        res.redirect("/admin/manage-products?message=Sản phẩm đã được xóa!");
+        
+        // Tìm và xóa sản phẩm
+        const product = await Product.findByIdAndDelete(id);
+        
+        if (!product) {
+            return res.status(404).json({ message: 'Sản phẩm không tồn tại!' });
+        }
+
+        res.status(200).json({ message: 'Sản phẩm đã được xóa thành công!' });
     } catch (error) {
         console.error("Lỗi khi xóa sản phẩm:", error);
-        res.status(500).send("Đã xảy ra lỗi khi xóa sản phẩm.");
+        res.status(500).json({ message: "Đã xảy ra lỗi khi xóa sản phẩm." });
     }
-};// Lấy danh sách đơn hàng cho Admin (sử dụng API trả về dữ liệu JSON)
+};
+// Lấy danh sách đơn hàng cho Admin (sử dụng API trả về dữ liệu JSON)
 export const getAdminOrders = async (req, res) => {
     try {
         // Fetch transactions from the database
