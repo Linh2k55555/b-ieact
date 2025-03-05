@@ -52,8 +52,13 @@ export const signup = async (req, res) => {
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
+  console.log("Received login data:", { email, password }); // Debug log
 
   try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email và mật khẩu không được để trống." });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Email không tồn tại." });
@@ -64,19 +69,18 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu không chính xác." });
     }
 
-    // Thiết lập session sau khi đăng nhập thành công
+    // Set up session after successful login
     req.session.userId = user._id;
     req.session.username = user.username;
     req.session.role = user.role;
 
-    console.log('Session after login:', req.session); // Kiểm tra lại session
+    console.log('Session after login:', req.session); // Debug session
 
     if (user.role === 'admin') {
-      return res.json({ message: "Đăng nhập thành công với vai trò admin!", redirectUrl: "/admin/dashboard" });
+      return res.json({ message: "Đăng nhập thành công với vai trò admin!", redirectUrl: "/admin" });
     } else if (user.role === 'user') {
       return res.json({ message: "Chào mừng bạn đến với cửa hàng Coffee House!", redirectUrl: "/home2" });
-    }
-    else {
+    } else {
       return res.status(403).json({ message: "Vai trò không hợp lệ." });
     }
   } catch (err) {
@@ -84,6 +88,8 @@ export const signin = async (req, res) => {
     res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
   }
 };
+
+
 // Thay đổi mật khẩu
 export const updatePassword = async (req, res) => {
   const { oldPassword, password, confirmPassword } = req.body;

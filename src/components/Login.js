@@ -8,32 +8,29 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Hàm xử lý khi người dùng submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');  // Reset message trước khi gửi yêu cầu
-  
-    console.log("Gửi yêu cầu tới: http://localhost:8080/api/signin", { email, password });  // Debug thông tin
-  
+    setMessage(''); // Reset message before sending the request
+
+    console.log("Gửi yêu cầu tới: http://localhost:8080/api/signin", { email, password });
+
     try {
-      // Gửi yêu cầu đăng nhập với withCredentials: true để gửi session cookie
       const response = await axios.post('http://localhost:8080/api/signin', { email, password }, { withCredentials: true });
       
-      // Kiểm tra phản hồi từ backend
-      console.log(response.data);
-      // Xử lý phản hồi từ backend
+      console.log(response.data); // Log the response
+
       if (response.data.message) {
         setMessage(response.data.message);
         if (response.data.redirectUrl) {
-          window.location.href = response.data.redirectUrl;  // Chuyển hướng nếu có URL trả về từ backend
+          window.location.href = response.data.redirectUrl;  // Chuyển hướng nếu có URL trả về
         }
       } else {
         setMessage('Đăng nhập thất bại');
       }
     } catch (error) {
-      // Kiểm tra lỗi
       if (error.response) {
+        console.log("Error response:", error.response); // Log the error response
         setMessage(error.response.data.message || 'Lỗi khi kết nối đến server');
       } else if (error.request) {
         setMessage('Không thể kết nối đến máy chủ');
@@ -41,9 +38,9 @@ const Login = () => {
         setMessage('Lỗi khi gửi yêu cầu');
       }
     } finally {
-      setLoading(false);
+      setLoading(false);  // Stop loading when done
     }
-  };
+};
 
   return (
     <div className="container">
