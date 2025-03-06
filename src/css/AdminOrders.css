@@ -53,7 +53,6 @@ header h1 {
     transform: translateY(-2px);
 }
 
-/* Add margin-top to ensure content is not hidden by fixed header */
 .admin-orders-container {
     margin-top: 160px;
     padding: 20px;
@@ -79,14 +78,12 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* Loading state */
 .loading {
     text-align: center;
     font-size: 1.2rem;
     font-weight: bold;
 }
 
-/* Error message */
 .message {
     position: fixed;
     top: 20px;
@@ -101,7 +98,6 @@ h2 {
     z-index: 1000;
 }
 
-/* Order list */
 .order-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -137,7 +133,6 @@ h2 {
     font-size: 1.1rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .order-list {
         grid-template-columns: repeat(2, 1fr);

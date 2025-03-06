@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Products from '../components/Products';
 import Footer from '../components/Footer';
-import MessageAlert from '../components/MessageAlert';
 import Carousel from '../components/Carousel';
 import '../css/Home.css';
 
 const Home1 = () => {
-  const message = "Chào mừng bạn đến với Coffee House!";
+  useEffect(() => {
+    const hasShownMessage = localStorage.getItem('hasShownWelcomeMessage');
+
+    if (!hasShownMessage) {
+      window.alert("Chào mừng bạn đến với Coffee House! Khám phá những sản phẩm cà phê tuyệt vời.");
+      
+      localStorage.setItem('hasShownWelcomeMessage', 'true');
+    }
+  }, []);
+
   return (
     <div>
       <Navbar />
       <Carousel />
-      <MessageAlert message={message} />
       <Products />
       <Footer />
     </div>

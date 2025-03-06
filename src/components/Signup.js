@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Bạn cần cài axios nếu chưa có
-
-import '../css/login.css'; // Đảm bảo đường dẫn đúng
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import '../css/login.css';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -10,18 +9,15 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [age, setAge] = useState('');
-  const [message, setMessage] = useState('');
   const [errors, setErrors] = useState([]);
   
-  const navigate = useNavigate(); // Khởi tạo useNavigate
+  const navigate = useNavigate();
 
-  // Hàm xử lý khi submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Gửi yêu cầu đăng ký đến backend
     try {
-      const response = await axios.post('http://localhost:8080/api/signup', {
+      await axios.post('http://localhost:8080/api/signup', {
         username,
         email,
         password,
@@ -29,29 +25,26 @@ const Signup = () => {
         age,
       });
 
-      setMessage(response.data.message || "Đăng ký thành công!");
-      setErrors([]); // Xóa lỗi cũ nếu đăng ký thành công
+      window.alert("Đăng ký thành công! Đang chuyển hướng...");
 
-      // Sau khi đăng ký thành công, chuyển hướng người dùng đến trang đăng nhập
-      navigate('/signin'); // Chuyển hướng đến trang đăng nhập
+      setTimeout(() => {
+        navigate('/signin');
+      }, 2000);
     } catch (error) {
-      // Nếu có lỗi trả về từ backend, hiển thị thông báo lỗi
       if (error.response) {
-        setMessage(error.response.data.message || "Đã có lỗi xảy ra.");
-        setErrors([error.response.data.message]); // Lưu lỗi để hiển thị
+        window.alert(error.response.data.message || "Đã có lỗi xảy ra.");
+        setErrors([error.response.data.message]);
       } else {
-        setMessage("Không thể kết nối với server.");
-        setErrors([]); // Không có lỗi từ server thì xóa lỗi
+        window.alert("Không thể kết nối với server.");
+        setErrors([]);
       }
     }
   };
-  
 
   return (
     <div className="container">
       <h1>Đăng ký</h1>
 
-      {message && <p className="message">{message}</p>}
       {errors.length > 0 && (
         <div className="errors">
           <ul>

@@ -1,36 +1,35 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../css/ForgotPassword.css"; // Đảm bảo có file CSS cho trang này
+import "../css/ForgotPassword.css"; 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Xử lý gửi yêu cầu đặt lại mật khẩu
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+ 
+    const confirmSend = window.confirm("Bạn có chắc muốn gửi yêu cầu đặt lại mật khẩu?");
+    if (!confirmSend) return;
+
     setLoading(true);
-    setMessage("");
 
     try {
       const response = await axios.post("http://localhost:8080/forgot-password", { email });
 
-      setMessage(response.data.message || "Liên kết đặt lại mật khẩu đã được gửi!");
-      
-      // Sau khi gửi thành công, chuyển hướng về trang đăng nhập sau 3 giây
-      setTimeout(() => {
-        navigate("/signin");
-      }, 3000);
+      window.alert(response.data.message || "Liên kết đặt lại mật khẩu đã được gửi!");
+
+      navigate("/signin");
 
     } catch (error) {
-      setMessage("❌ Lỗi! Không thể gửi yêu cầu. Hãy thử lại.");
+      window.alert("❌ Lỗi! Không thể gửi yêu cầu. Hãy thử lại.");
       console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -38,8 +37,6 @@ const ForgotPassword = () => {
       <div className="container">
         <h1>Quên mật khẩu</h1>
         <p className="description">Nhập email của bạn để nhận liên kết đặt lại mật khẩu</p>
-
-        {message && <div className="message">{message}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">

@@ -5,47 +5,41 @@ import '../css/login.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage(''); // Reset message before sending the request
-
-    console.log("Gửi yêu cầu tới: http://localhost:8080/api/signin", { email, password });
 
     try {
-      const response = await axios.post('http://localhost:8080/api/signin', { email, password }, { withCredentials: true });
-      
-      console.log(response.data); // Log the response
+      const response = await axios.post('http://localhost:8080/api/signin', 
+        { email, password }, 
+        { withCredentials: true }
+      );
 
       if (response.data.message) {
-        setMessage(response.data.message);
+        window.alert(response.data.message);
+
         if (response.data.redirectUrl) {
-          window.location.href = response.data.redirectUrl;  // Chuyển hướng nếu có URL trả về
+          window.location.href = response.data.redirectUrl; 
         }
-      } else {
-        setMessage('Đăng nhập thất bại');
       }
     } catch (error) {
       if (error.response) {
-        console.log("Error response:", error.response); // Log the error response
-        setMessage(error.response.data.message || 'Lỗi khi kết nối đến server');
+        window.alert(error.response.data.message || 'Lỗi khi kết nối đến server');
       } else if (error.request) {
-        setMessage('Không thể kết nối đến máy chủ');
+        window.alert('Không thể kết nối đến máy chủ');
       } else {
-        setMessage('Lỗi khi gửi yêu cầu');
+        window.alert('Lỗi khi gửi yêu cầu'); 
       }
     } finally {
-      setLoading(false);  // Stop loading when done
+      setLoading(false);
     }
-};
+  };
 
   return (
     <div className="container">
       <h1>Đăng nhập</h1>
-      {message && <p className="message">{message}</p>}
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <i className="fas fa-envelope"></i>

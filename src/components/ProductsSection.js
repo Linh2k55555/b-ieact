@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-// Định nghĩa axios instance một lần
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080",
-  withCredentials: true, // Quan trọng! Để gửi session cookie
+  withCredentials: true, 
 });
 
 const ProductsSection = () => {
@@ -15,7 +14,7 @@ const ProductsSection = () => {
     const checkAuth = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/auth/check", {
-          withCredentials: true, // 🔥 Quan trọng! Đảm bảo session được gửi
+          withCredentials: true, 
         });
         console.log("🔍 Trạng thái đăng nhập:", response.data);
         setIsAuthenticated(response.data.isAuthenticated);
@@ -28,7 +27,6 @@ const ProductsSection = () => {
     checkAuth();
   }, []);
   
-  // ✅ Lấy danh sách sản phẩm
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -41,7 +39,6 @@ const ProductsSection = () => {
     fetchProducts();
   }, []);
 
-  // ✅ Thêm vào giỏ hàng
   const addToCart = async (productId, price, name) => {
     if (!isAuthenticated) {
       alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");

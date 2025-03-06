@@ -8,40 +8,41 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [validToken, setValidToken] = useState(false);
+  const [validToken, setValidToken] = useState(null);
 
-  // ✅ Kiểm tra token trước khi hiển thị form
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/reset-password/${token}`);
-        setValidToken(response.data.valid);
+        await axios.get(`http://localhost:8080/reset-password/${token}`);
+        setValidToken(true);
       } catch (error) {
-        setMessage("Token không hợp lệ hoặc đã hết hạn!");
+        setValidToken(false);
       }
     };
     verifyToken();
   }, [token]);
 
-  // ✅ Xử lý cập nhật mật khẩu
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (newPassword !== confirmPassword) {
-      setMessage("Mật khẩu mới không khớp!");
+      window.alert("Mật khẩu mới không khớp!");
       return;
     }
 
     try {
-      const response = await axios.post(`http://localhost:8080/reset-password/${token}`, {
+      await axios.post(`http://localhost:8080/reset-password/${token}`, {
         newPassword,
         confirmPassword,
       });
 
-      alert(response.data.message || "Mật khẩu đã cập nhật!");
-      navigate("/signin");
+      window.alert("Mật khẩu đã được cập nhật! Chuyển hướng về trang đăng nhập...");
+      
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
     } catch (error) {
-      setMessage("Lỗi khi đặt lại mật khẩu, vui lòng thử lại.");
+      window.alert("Lỗi khi đặt lại mật khẩu, vui lòng thử lại.");
     }
   };
 
@@ -49,10 +50,10 @@ const ResetPassword = () => {
     <div className="reset-password-container">
       <div className="container">
         <h1>Đặt lại mật khẩu</h1>
-        
-        {message && <div className="message">{message}</div>}
 
-        {validToken ? (
+        {validToken === null ? (
+          <p>Đang kiểm tra liên kết...</p>
+        ) : validToken ? (
           <form onSubmit={handleSubmit}>
             <input
               type="password"

@@ -5,17 +5,15 @@ import '../css/Products.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Kiểm tra đăng nhập
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
   const navigate = useNavigate();
 
-  // Lấy danh sách sản phẩm từ backend
   useEffect(() => {
     fetch('/api/products')
       .then(response => response.json())
       .then(data => setProducts(data))
       .catch(error => console.error('Lỗi khi lấy sản phẩm:', error));
 
-    // Kiểm tra trạng thái đăng nhập
     axios.get('/api/auth/check', { withCredentials: true })
       .then(response => {
         setIsAuthenticated(response.data.isAuthenticated);
@@ -26,11 +24,10 @@ const Products = () => {
       });
   }, []);
 
-  // Xử lý thêm vào giỏ hàng
   const addToCart = async (productId, price, name) => {
     if (!isAuthenticated) {
       if (window.confirm("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập ngay không?")) {
-        navigate('/signin'); // Điều hướng đến trang đăng nhập
+        navigate('/signin'); 
       }
       return;
     }

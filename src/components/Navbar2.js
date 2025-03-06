@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import '../css/Navbar2.css';
-import CartSidebar from './CartSidebar';  // ✅ Import CartSidebar
+import CartSidebar from './CartSidebar';  
 
 const Navbar2 = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -11,7 +11,6 @@ const Navbar2 = () => {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Xử lý khi cuộn trang
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -21,17 +20,14 @@ const Navbar2 = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ✅ Toggle mở/đóng dropdown menu người dùng
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // ✅ Toggle mở/đóng giỏ hàng
   const toggleCart = () => {
     setCartOpen(!cartOpen);
   };
 
-  // ✅ Xử lý đăng xuất
   const handleLogout = async () => {
     try {
       const response = await axios.get('/logout');
@@ -58,10 +54,9 @@ const Navbar2 = () => {
               <Link to="/home2" className="nav-link">Trang chủ</Link>
               <a href="#menu" className="nav-link">Menu</a>
               
-              {/* ✅ Dropdown menu người dùng */}
               <div className="nav-item dropdown">
                 <button className="nav-link dropdown-toggle" onClick={toggleDropdown}>
-                  <i className="bi bi-person"></i> {/* User icon */}
+                  <i className="bi bi-person"></i>
                 </button>
                 <ul className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
                   <Link className="dropdown-item" to="/update-password">Đổi mật khẩu</Link>
@@ -72,7 +67,6 @@ const Navbar2 = () => {
                 </ul>
               </div>
 
-              {/* ✅ Nút mở giỏ hàng */}
               <button id="cart-toggle" className="nav-link cart-icon" onClick={toggleCart}>
                 🛒 Giỏ hàng
               </button>
@@ -81,7 +75,6 @@ const Navbar2 = () => {
         </div>
       </nav>
 
-      {/* ✅ Hiển thị giỏ hàng khi cartOpen = true */}
       {cartOpen && <CartSidebar onClose={toggleCart} />}
     </>
   );

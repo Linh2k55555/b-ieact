@@ -1,142 +1,134 @@
-/* Phần navbar */
 header {
-    background-color: rgba(44, 19, 6, 0.9);
-    width: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    position: fixed; /* Làm navbar cố định */
-    top: 0; /* Đặt navbar luôn ở trên đầu */
-    left: 0; /* Đảm bảo navbar không bị lệch */
-    z-index: 1000; /* Để navbar luôn nằm trên các phần tử khác */
-  }
-  
-  header h1 {
-    font-size: 2.2rem;
-    font-weight: bold;
-    margin: 0;
-    color: #e6b17e;
-    font-family: 'Playfair Display', serif;
-  }
-  
-  .action-buttons a {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
-    background-color: #c17f59;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    border: none;
-    font-weight: 500;
-  }
-  
-  .action-buttons a:hover {
-    background-color: #8b573c;
-    transform: translateY(-2px);
-  }
-  
-  /* Cung cấp khoảng cách dưới navbar khi cuộn xuống */
-  .admin-products-container {
-    padding-top: 80px; /* Đảm bảo rằng phần dưới navbar không bị che */
-  }
-  
-  /* Container cho sản phẩm */
-  .container {
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 30px;
-    background: rgba(44, 19, 6, 0.85);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    width: 95%;
-  }
-  
-  h2 {
-    color: #e6b17e;
-    font-family: 'Playfair Display', serif;
-    margin-bottom: 20px;
-  }
-  
-  /* Loading state */
-  .loading {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  /* Thông báo lỗi */
-  .message {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(44, 19, 6, 0.95);
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border-left: 5px solid #e6b17e;
-    z-index: 1000;
-  }
-  
-  /* Danh sách sản phẩm */
+  background-color: rgba(44, 19, 6, 0.9);
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin: 0;
+  color: #e6b17e;
+  font-family: 'Playfair Display', serif;
+}
+
+.action-buttons a {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #c17f59;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  border: none;
+  font-weight: 500;
+}
+
+.action-buttons a:hover {
+  background-color: #8b573c;
+  transform: translateY(-2px);
+}
+
+.admin-products-container {
+  padding-top: 80px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 30px;
+  background: rgba(44, 19, 6, 0.85);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  width: 95%;
+}
+
+h2 {
+  color: #e6b17e;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(44, 19, 6, 0.95);
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border-left: 5px solid #e6b17e;
+  z-index: 1000;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.product-item {
+  background: rgba(59, 28, 12, 0.9);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover {
+  transform: translateY(-10px);
+}
+
+.product-image {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-details {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.product-details h3 {
+  color: #e6b17e;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+}
+
+.product-details p {
+  color: #ddd;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
   .product-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 20px;
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .product-item {
-    background: rgba(59, 28, 12, 0.9);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 480px) {
+  .product-list {
+    grid-template-columns: 1fr;
   }
-  
-  .product-item:hover {
-    transform: translateY(-10px);
-  }
-  
-  .product-image {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .product-details {
-    margin-top: 10px;
-    text-align: center;
-  }
-  
-  .product-details h3 {
-    color: #e6b17e;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-  }
-  
-  .product-details p {
-    color: #ddd;
-    font-size: 1.1rem;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .product-list {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .product-list {
-      grid-template-columns: 1fr;
-    }
-  }
-  
+}

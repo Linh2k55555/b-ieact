@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import '../css/AdminDashboard.css'
+import '../css/AdminDashboard.css';
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Fetch products from the backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch('http://localhost:8080/admin/products', {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
         });
 
@@ -25,22 +22,20 @@ const AdminProducts = () => {
         const data = await response.json();
 
         if (data && Array.isArray(data.products)) {
-          setProducts(data.products); 
+          setProducts(data.products);
         } else {
           setMessage('Không có sản phẩm nào được tìm thấy.');
         }
       } catch (error) {
-        console.error('Error fetching products:', error);
         setMessage('Không thể tải danh sách sản phẩm.');
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
@@ -48,14 +43,12 @@ const AdminProducts = () => {
         alert('Đăng xuất thành công!');
       }
     } catch (error) {
-      console.error('Error during logout', error);
       alert('Có lỗi xảy ra trong khi đăng xuất!');
     }
   };
 
   return (
     <div className="admin-products-container">
-      {/* Navbar Component */}
       <header>
         <h1>Quản lý sản phẩm</h1>
         <div className="action-buttons">
@@ -66,17 +59,10 @@ const AdminProducts = () => {
       </header>
 
       <div className="container">
-        {/* Display message if there is an error or no products */}
-        {message && (
-          <p className="message">
-            {message}
-          </p>
-        )}
+        {message && <p className="message">{message}</p>}
 
-        {/* Section title */}
         <h2>Danh sách sản phẩm</h2>
 
-        {/* Show loading state while fetching data */}
         {loading ? (
           <p className="loading">Đang tải sản phẩm...</p>
         ) : (
@@ -109,4 +95,3 @@ const AdminProducts = () => {
 };
 
 export default AdminProducts;
-

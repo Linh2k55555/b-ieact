@@ -3,23 +3,21 @@ import axios from "axios";
 
 const UpdateUser = () => {
   const [formData, setFormData] = useState({ username: "", age: "" });
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Fetch user information from the API
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/user", {
-          withCredentials: true, // Đảm bảo gửi cookies với yêu cầu
+          withCredentials: true,
         });
         setFormData({
           username: response.data.user.username,
           age: response.data.user.age,
         });
-        setLoading(false);
       } catch (error) {
-        setMessage("Lỗi khi lấy thông tin người dùng.");
+        window.alert("Lỗi khi lấy thông tin người dùng.");
+      } finally {
         setLoading(false);
       }
     };
@@ -27,26 +25,24 @@ const UpdateUser = () => {
     fetchUserInfo();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(""); // Reset message trước khi gửi yêu cầu
+    setLoading(true);
 
     try {
-      await axios.post(
-        "http://localhost:8080/api/user/update",
-        formData,
-        {
-          withCredentials: true, // Đảm bảo gửi cookies với yêu cầu
-        }
-      );
-      setMessage("Cập nhật thông tin thành công!");
+      await axios.post("http://localhost:8080/api/user/update", formData, {
+        withCredentials: true,
+      });
+
+      window.alert("Cập nhật thông tin thành công!");
+
       setTimeout(() => {
-        // Sau khi cập nhật thành công, chuyển hướng về trang chủ hoặc trang hồ sơ
-        window.location.href = "/home2";  // Hoặc bạn có thể thay đổi URL tùy ý
-      }, 2000); // Chờ 2 giây trước khi chuyển hướng
+        window.location.href = "/home2"; 
+      }, 2000);
     } catch (error) {
-      setMessage("Lỗi khi cập nhật thông tin.");
+      window.alert("Lỗi khi cập nhật thông tin. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,8 +78,6 @@ const UpdateUser = () => {
           {loading ? "Đang cập nhật..." : "Cập nhật"}
         </button>
       </form>
-
-      {message && <p>{message}</p>}
     </div>
   );
 };

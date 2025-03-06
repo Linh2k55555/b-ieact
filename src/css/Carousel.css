@@ -1,4 +1,3 @@
-/* 🌟 Phần tổng thể của carousel */
 .carousel {
   position: relative;
   width: 100%;
@@ -7,13 +6,11 @@
   overflow: hidden;
 }
 
-/* 🌆 Slide container */
 .carousel-inner {
   display: flex;
   transition: transform 0.5s ease-in-out;
 }
 
-/* 🎞 Slide */
 .carousel-item {
   position: absolute;
   width: 100%;
@@ -28,7 +25,6 @@
   transform: scale(1);
 }
 
-/* 🖼 Hình ảnh nền */
 .carousel-image {
   width: 100%;
   height: 100%;
@@ -36,7 +32,6 @@
   filter: brightness(0.6);
 }
 
-/* 📜 Lớp phủ mờ */
 .carousel-overlay {
   position: absolute;
   top: 0;
@@ -48,7 +43,6 @@
   justify-content: center;
 }
 
-/* 📢 Nội dung của slide */
 .carousel-content {
   text-align: center;
   color: #fff;
@@ -66,7 +60,6 @@
   margin-bottom: 20px;
 }
 
-/* 🎟 Nút bấm */
 .carousel-btn {
   background: linear-gradient(45deg, #6a11cb, #2575fc);
   padding: 12px 20px;
@@ -82,7 +75,6 @@
   transform: scale(1.05);
 }
 
-/* ◀️▶️ Nút điều hướng */
 .carousel-control {
   position: absolute;
   top: 50%;
@@ -108,7 +100,6 @@
   right: 10px;
 }
 
-/* 📱 Responsive */
 @media (max-width: 768px) {
   .carousel-content h2 {
     font-size: 2rem;

@@ -15,7 +15,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Fixed header at the top */
 header {
     background-color: rgba(44, 19, 6, 0.9);
     width: 100%;
@@ -30,14 +29,12 @@ header {
     z-index: 1000;
 }
 
-/* Header text */
 header h1 {
     color: var(--text-color);
     font-size: 2em;
     margin: 0;
 }
 
-/* Button styles */
 .btn-home {
     display: inline-flex;
     align-items: center;
@@ -59,15 +56,14 @@ header h1 {
     transform: translateY(-2px);
 }
 
-/* Create margin top for the container so it's not hidden under the header */
+
 .container {
-    padding-top: 160px; /* Ensure content is not hidden under the header */
+    padding-top: 160px; 
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Form container styles */
 .form-container {
     background: white;
     border-radius: 8px;
@@ -76,7 +72,6 @@ header h1 {
     margin-bottom: 30px;
 }
 
-/* Product table styles */
 .products-table {
     width: 100%;
     background: white;
@@ -104,7 +99,6 @@ header h1 {
     border-radius: 5px;
 }
 
-/* Action buttons styles */
 .action-buttons {
     display: flex;
     gap: 10px;

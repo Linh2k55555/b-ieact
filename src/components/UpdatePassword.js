@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Thêm hook useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const UpdatePassword = () => {
   const [formData, setFormData] = useState({
@@ -8,10 +8,8 @@ const UpdatePassword = () => {
     password: '',
     confirmPassword: '',
   });
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
-  const navigate = useNavigate(); // Khởi tạo navigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,29 +22,24 @@ const UpdatePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrors([]); // Reset errors before submitting
 
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/update-password', // API endpoint của backend
+      await axios.post(
+        'http://localhost:8080/api/update-password',
         formData,
-        { withCredentials: true } // Đảm bảo session cookie được gửi
+        { withCredentials: true }
       );
 
-      // Hiển thị thông báo thành công từ backend
-      setMessage(response.data.message);
+      window.alert("Cập nhật mật khẩu thành công!");
 
-      // Sau khi thành công, chuyển hướng về trang chủ (hoặc trang bạn muốn)
       setTimeout(() => {
-        navigate('/home2'); // Chuyển hướng về trang chủ sau 2 giây
-      }, 2000); // Đợi 2 giây để hiển thị thông báo thành công trước khi chuyển hướng
-
+        navigate('/home2');
+      }, 2000);
     } catch (error) {
       if (error.response) {
-        // Xử lý lỗi validation từ backend
-        setErrors(error.response.data.errors || [error.response.data.message]);
+        window.alert(error.response.data.message || "Lỗi khi cập nhật mật khẩu.");
       } else {
-        setMessage('Lỗi khi kết nối đến máy chủ');
+        window.alert("Không thể kết nối đến máy chủ.");
       }
     } finally {
       setLoading(false);
@@ -56,20 +49,6 @@ const UpdatePassword = () => {
   return (
     <div className="container">
       <h1>Cập nhật mật khẩu</h1>
-
-      {/* Hiển thị thông báo thành công */}
-      {message && <p className="message">{message}</p>}
-
-      {/* Hiển thị lỗi nếu có */}
-      {errors.length > 0 && (
-        <div className="errors">
-          <ul>
-            {errors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
