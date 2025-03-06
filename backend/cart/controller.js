@@ -84,16 +84,18 @@ export const removeFromCart = async (req, res) => {
         return res.status(500).json({ message: 'Đã xảy ra lỗi, vui lòng thử lại sau.7' });
     }
 };
-//thêm vào giỏ hàng
 export const addToCart = async (req, res) => {
     const { productId, price } = req.body;
-    const userId = req.session.userId; 
+    const userId = req.session.userId;  // Lấy ID người dùng từ session
+
+    console.log("Session hiện tại:", req.session);  // Debug xem session có lưu userId không
 
     if (!userId) {
         if (!req.session.cart) {
             req.session.cart = { items: [] };
         }
 
+        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         const existingItem = req.session.cart.items.find(item => item.productId === productId);
         if (existingItem) {
             existingItem.quantity += 1;
@@ -105,18 +107,25 @@ export const addToCart = async (req, res) => {
             });
         }
 
-        return res.status(200).json({ message: 'Sản phẩm đã được thêm vào giỏ hàng tạm thời!' });
+        req.session.save((err) => {
+            if (err) {
+                console.error("Lỗi khi lưu session giỏ hàng:", err);
+                return res.status(500).json({ message: "Không thể lưu giỏ hàng tạm thời." });
+            }
+            return res.status(200).json({ message: "Sản phẩm đã được thêm vào giỏ hàng tạm thời!" });
+        });
+
+        return;
     }
 
     try {
         if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ message: 'ID sản phẩm không hợp lệ' });
+            return res.status(400).json({ message: "ID sản phẩm không hợp lệ" });
         }
 
         let cart = await Cart.findOne({ userId });
 
         if (!cart) {
-            //tạo giỏ hàng nếu chưa có
             cart = new Cart({
                 userId,
                 items: [{ productId, price, quantity: 1 }],
@@ -133,13 +142,11 @@ export const addToCart = async (req, res) => {
             }
         }
 
-        // lưu giỏ hàng về database
         await cart.save();
-        res.status(200).json({ message: 'Thêm sản phẩm vào giỏ hàng thành công' });
+        res.status(200).json({ message: "Thêm sản phẩm vào giỏ hàng thành công" });
     } catch (error) {
-        console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
-        res.status(500).json({ message: 'Đã xảy ra lỗi, vui lòng thử lại sau.' });
+        console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
+        res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
     }
 };
-
 

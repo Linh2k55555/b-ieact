@@ -32,28 +32,37 @@ app.use(express.urlencoded({ extended: true }));
 // Kết nối đến cơ sở dữ liệu MongoDB
 connectDB(process.env.DB_URI);
 
-// Cấu hình CORS - Đảm bảo các yêu cầu từ frontend được chấp nhận
+
 app.use(cors({
-  origin: 'http://localhost:3000',  // Chỉ cho phép frontend tại http://localhost:3000
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Các phương thức cho phép
-  credentials: true,  // Cho phép gửi cookies với các yêu cầu
+  origin: 'http://localhost:3000', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,  // 🔥 Quan trọng để session hoạt động
 }));
 
-// Cấu hình session - Đảm bảo session được tạo và quản lý đúng cách
+// Đảm bảo middleware session được khai báo TRƯỚC khi sử dụng route
 app.use(session({
-  secret: process.env.SESSION_SECRET || "defaultSecretKey",  // Mã bí mật cho session
-  resave: false,  // Không lưu lại session nếu không thay đổi
-  saveUninitialized: false,  // Không lưu session mới nếu không có gì thay đổi
+  secret: process.env.SESSION_SECRET || "defaultSecretKey",
+  resave: false,
+  saveUninitialized: false,
+  proxy: true,  
   cookie: {
-    secure: false,  // Nếu dùng HTTPS thì đặt true
-    httpOnly: true,  // Cookie không thể truy cập qua JavaScript
-    maxAge: 1000 * 60 * 60 * 24,  // Cookie sống 1 ngày
+    secure: false,  // Nếu HTTPS thì đổi thành true
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 24, // 1 ngày
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URI,
-    collectionName: "sessions", // Lưu session vào collection "sessions"
+    collectionName: "sessions",
   }),
 }));
+
+
+// Middleware để kiểm tra session
+app.use((req, res, next) => {
+  console.log("✅ Middleware session hiện tại:", req.session);
+  next();
+});
 
 // Các route
 app.use("/api", authRouter); // Người dùng
@@ -73,6 +82,18 @@ app.use("/", homeRouter);
 // Cấu hình serve các file tĩnh (frontend React)
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get("/api/auth/check", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  console.log("🔍 Kiểm tra session từ Frontend:", req.session);
+
+  if (req.session && req.session.userId) {
+    return res.json({ isAuthenticated: true, userId: req.session.userId, username: req.session.username });
+  } else {
+    return res.json({ isAuthenticated: false });
+  }
+});
 
 //aapi tỉnh thành
 // Đọc dữ liệu từ file Excel

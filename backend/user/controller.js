@@ -49,10 +49,9 @@ export const signup = async (req, res) => {
   }
   
 };
-
 export const signin = async (req, res) => {
   const { email, password } = req.body;
-  console.log("Received login data:", { email, password }); // Debug log
+  console.log("Nhận dữ liệu đăng nhập:", { email, password });
 
   try {
     if (!email || !password) {
@@ -69,22 +68,30 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu không chính xác." });
     }
 
-    // Set up session after successful login
     req.session.userId = user._id;
-    req.session.username = user.username;
-    req.session.role = user.role;
+req.session.username = user.username;
+req.session.role = user.role;
+req.session.save(); // 🔥 Đảm bảo lưu session vào MongoDB
 
-    console.log('Session after login:', req.session); // Debug session
+    // 🔥 Thêm log để kiểm tra session
+    console.log("Session sau đăng nhập:", req.session);
 
-    if (user.role === 'admin') {
-      return res.json({ message: "Đăng nhập thành công với vai trò admin!", redirectUrl: "/admin" });
-    } else if (user.role === 'user') {
-      return res.json({ message: "Chào mừng bạn đến với cửa hàng Coffee House!", redirectUrl: "/home2" });
-    } else {
-      return res.status(403).json({ message: "Vai trò không hợp lệ." });
-    }
+    // Kiểm tra ngay lập tức nếu session có được lưu không
+    req.session.save(err => {
+      if (err) {
+        console.error("Lỗi khi lưu session:", err);
+        return res.status(500).json({ message: "Lỗi khi lưu session." });
+      }
+      
+      console.log("Session đã được lưu:", req.session);
+      res.json({
+        message: "Đăng nhập thành công!",
+        redirectUrl: user.role === "admin" ? "/admin" : "/home2",
+      });
+    });
+
   } catch (err) {
-    console.error("Lỗi trong quá trình đăng nhập:", err);
+    console.error("Lỗi đăng nhập:", err);
     res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });
   }
 };

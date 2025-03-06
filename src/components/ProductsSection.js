@@ -1,32 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+// Định nghĩa axios instance một lần
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8080",
+  withCredentials: true, // Quan trọng! Để gửi session cookie
+});
 
 const ProductsSection = () => {
   const [products, setProducts] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Fetch products when the component is mounted
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/auth/check", {
+          withCredentials: true, // 🔥 Quan trọng! Đảm bảo session được gửi
+        });
+        console.log("🔍 Trạng thái đăng nhập:", response.data);
+        setIsAuthenticated(response.data.isAuthenticated);
+      } catch (error) {
+        console.error("❌ Lỗi kiểm tra đăng nhập:", error);
+        setIsAuthenticated(false);
+      }
+    };
+  
+    checkAuth();
+  }, []);
+  
+  // ✅ Lấy danh sách sản phẩm
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/products", {
-          withCredentials: true,  // Add this to send cookies along with the request
-        });
-        setProducts(response.data);  // Update the state with fetched products
+        const response = await axiosInstance.get("/api/products");
+        setProducts(response.data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Lỗi khi lấy sản phẩm:", error);
       }
     };
-    
-
     fetchProducts();
-  }, []); // Empty dependency array, so it runs only once when the component mounts
+  }, []);
 
-  // Add product to the cart
+  // ✅ Thêm vào giỏ hàng
   const addToCart = async (productId, price, name) => {
+    if (!isAuthenticated) {
+      alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:8080/api/cart/add', { productId, price, name }); // Adjusted to the correct URL
+      const response = await axiosInstance.post("/api/cart/add", { productId, price, name });
       alert(response.data.message || "Thêm vào giỏ hàng thành công!");
     } catch (error) {
+      console.error("Lỗi khi thêm vào giỏ hàng:", error);
       alert("Lỗi khi thêm vào giỏ hàng. Vui lòng thử lại.");
     }
   };
@@ -38,13 +64,19 @@ const ProductsSection = () => {
         {products.length > 0 ? (
           products.map((product) => (
             <div key={product._id} className="product-card">
-              {/* Assuming product.image is a base64 image string */}
-              <img className="product-image" src={`data:image/jpeg;base64,${product.image}`} alt={product.name} />
+              <img
+                className="product-image"
+                src={`data:image/jpeg;base64,${product.image}`}
+                alt={product.name}
+              />
               <div className="product-info">
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
                 <div className="product-price">
-                  {product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                  {product.price.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
                 </div>
                 <button
                   className="add-to-cart-btn"
