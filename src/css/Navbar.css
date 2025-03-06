@@ -1,10 +1,16 @@
 .navbar {
-  background-color: #2c1306;
+  background-color: transparent;
   padding: 1rem 0;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: linear-gradient(135deg, #5a60d1, #7a3ea1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container {
@@ -19,8 +25,13 @@
 .logo {
   font-family: "Playfair Display", serif;
   font-size: 2rem;
-  color: var(--text-light);
+  color: #fff;
   text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #ffd700;
 }
 
 .nav-links {
@@ -37,7 +48,7 @@
 }
 
 .nav-links a:hover {
-  color: var(--text-light);
+  color: #ffd700;
 }
 
 .cart-button {
@@ -45,4 +56,26 @@
   border: none;
   color: #fff;
   cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.cart-button:hover {
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .navbar.scrolled {
+    padding: 0.5rem 0;
+  }
 }

@@ -1,126 +1,110 @@
+.navbar {
+  background-color: transparent;
+  padding: 1rem 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-  /* Navbar */
-  .navbar {
-    background-color: var(--bg-dark);
-    padding: 1rem 0;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-  }
+.navbar.scrolled {
+  background: linear-gradient(135deg, #5a60d1, #7a3ea1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #ffd700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ffd700;
+}
+
+.dropdown-menu {
+  background: rgba(70, 11, 207, 0.95);
+  border-radius: 8px;
+  padding: 10px;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  display: none;
+  min-width: 150px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 10px;
+  display: block;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background: #764ba2;
+  color: #fff;
+}
+
+.cart-icon {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.cart-icon:hover {
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
   .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 0 2rem;
-  }
-
-  .logo {
-    font-family: "Playfair Display", serif;
-    font-size: 2rem;
-    color: var(--text-light);
-    text-decoration: none;
   }
 
   .nav-links {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
+  .navbar.scrolled {
+    padding: 0.5rem 0;
   }
-
-  .nav-links a:hover {
-    color: var(--text-light);
-  }
-
-  .dropdown-menu {
-    background-color: var(--bg-dark);
-    border: 1px solid rgba(230, 177, 126, 0.2);
-  }
-
-  .dropdown-item {
-    color: var(--text-light);
-  }
-
-  .dropdown-item:hover {
-    background-color: rgba(193, 127, 89, 0.3);
-    color: #fff;
-  }
-
-  .dropdown .btn {
-    background-color: var(--primary-color);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    color: #fff;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .dropdown .btn:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-  }
-
-  /* Message Alert */
-  .message {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(44, 19, 6, 0.95);
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    border-left: 5px solid #e6b17e;
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    gap: 10px;
-    min-width: 300px;
-    max-width: 600px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-
-  .message.show {
-    display: flex;
-    opacity: 1;
-  }
-
-  .message-icon {
-    color: #e6b17e;
-    font-size: 1.2em;
-  }
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -100%);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-  }
-
-  @keyframes slideOut {
-    from {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-    to {
-      opacity: 0;
-      transform: translate(-50%, -100%);
-    }
-  }
+}
