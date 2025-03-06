@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Thêm axios để dễ gọi API
 import '../css/AdminOrders.css';
 
 const AdminOrders = () => {
@@ -8,31 +9,21 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch orders from backend
+  // ✅ Fetch danh sách đơn hàng từ backend
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:8080/admin/orders', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
+        const response = await axios.get('http://localhost:8080/admin/orders', { withCredentials: true });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch orders');
-        }
+        console.log("📦 Dữ liệu đơn hàng:", response.data);
 
-        const data = await response.json();
-
-        if (data && Array.isArray(data.orders)) {
-          setOrders(data.orders);
+        if (response.data.orders && Array.isArray(response.data.orders)) {
+          setOrders(response.data.orders);
         } else {
-          setMessage('Không có đơn hàng nào được tìm thấy.');
+          setMessage('Không có đơn hàng nào.');
         }
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error('❌ Lỗi khi tải danh sách đơn hàng:', error);
         setMessage('Không thể tải danh sách đơn hàng.');
       } finally {
         setLoading(false);
@@ -42,16 +33,35 @@ const AdminOrders = () => {
     fetchOrders();
   }, []);
 
-  // Handle logout
+  // ✅ Hàm cập nhật trạng thái đơn hàng
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const response = await axios.put(`http://localhost:8080/transactions/admin/update-status/${orderId}`, 
+        { status: newStatus }, 
+        { withCredentials: true }
+      );
+
+      alert(response.data.message || "Cập nhật trạng thái thành công!");
+      
+      // Cập nhật trạng thái mới vào danh sách đơn hàng
+      setOrders(prevOrders =>
+        prevOrders.map(order => order._id === orderId ? { ...order, status: newStatus } : order)
+      );
+
+    } catch (error) {
+      console.error("❌ Lỗi khi cập nhật trạng thái:", error);
+      alert("Đã xảy ra lỗi khi cập nhật trạng thái!");
+    }
+  };
+
+  // ✅ Hàm đăng xuất admin
   const handleLogout = async () => {
     try {
-      const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
-      if (response.status === 200) {
-        alert('Đăng xuất thành công!');
-        navigate('/signin');
-      }
+      await axios.get('http://localhost:8080/logout', { withCredentials: true });
+      alert('Đăng xuất thành công!');
+      navigate('/signin');
     } catch (error) {
-      console.error('Error during logout', error);
+      console.error('❌ Lỗi khi đăng xuất:', error);
       alert('Có lỗi xảy ra trong khi đăng xuất!');
     }
   };
@@ -61,35 +71,51 @@ const AdminOrders = () => {
       <header>
         <h1>Quản lý đơn hàng</h1>
         <div className="action-buttons">
-          <a href="/logout" onClick={handleLogout}>Đăng xuất</a>
+          <button onClick={handleLogout}>Đăng xuất</button>
           <a href="/admin/manage-products" className="btn-manage-products">Quản lý sản phẩm</a>
           <a href="/admin/orders" className="btn-manage-orders">Quản lý đơn hàng</a>
         </div>
       </header>
 
       <div className="container">
-        {message && (
-          <p className="message">{message}</p>
-        )}
+        {message && <p className="message">{message}</p>}
 
         <h2>Danh sách đơn hàng</h2>
 
         {loading ? (
           <p className="loading">Đang tải đơn hàng...</p>
         ) : (
-          <div className="order-list">
-            {orders.map((order) => (
-              <div key={order._id} className="order-item">
-                <div className="order-details">
-                  <h3>{order.userId.email}</h3>
-                  <p>
-                    Tổng tiền: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.total)}
-                  </p>
-                  <p>Trạng thái: {order.status}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <table className="order-table">
+            <thead>
+              <tr>
+                <th>Ngày đặt hàng</th>
+                <th>Email Khách Hàng</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{new Date(order.createdAt).toLocaleString('vi-VN')}</td>
+                  <td>{order.userId?.email || "N/A"}</td>
+                  <td>{order.total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</td>
+                  <td>
+                    <select 
+                      value={order.status} 
+                      onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                    >
+                      <option value="Chờ xác nhận">Chờ xác nhận</option>
+                      <option value="Đã xác nhận">Đã xác nhận</option>
+                      <option value="Đang giao">Đang giao</option>
+                      <option value="Đã huỷ">Đã huỷ</option>
+                      <option value="Đã giao">Đã giao</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

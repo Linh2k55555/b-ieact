@@ -69,16 +69,14 @@ export const updateProduct = async (req, res) => {
         res.status(500).json({ message: "Đã xảy ra lỗi khi xóa sản phẩm." });
     }
 };
-// Lấy danh sách đơn hàng cho Admin (sử dụng API trả về dữ liệu JSON)
 export const getAdminOrders = async (req, res) => {
     try {
-        // Fetch transactions from the database
         const transactions = await Transaction.find()
             .populate('userId', 'email')
             .sort({ createdAt: -1 });
 
-        // Send the transactions data as JSON
-        res.json({ transactions });
+        // Đổi `transactions` thành `orders` để khớp với frontend
+        res.json({ orders: transactions });
     } catch (error) {
         console.error('Lỗi khi lấy danh sách đơn hàng:', error);
         res.status(500).json({ message: "Đã xảy ra lỗi, vui lòng thử lại sau." });

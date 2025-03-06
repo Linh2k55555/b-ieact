@@ -35,6 +35,7 @@ router.get("/products", isAdmin, async (req, res) => {
       res.status(500).json({ message: "Đã xảy ra lỗi khi lấy sản phẩm." });
     }
   });
-   router.get("/orders", isAdmin, getAdminOrders);
+router.get("/orders", isAdmin, getAdminOrders);
+
 
 export default router;
