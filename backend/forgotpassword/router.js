@@ -1,11 +1,15 @@
 import express from "express";
-import { forgotPassword, renderResetPassword, resetPassword } from "./controller.js";
+import { forgotPassword, verifyResetToken, resetPassword } from "./controller.js";
 
 const router = express.Router();
 
-router.get("/forgot-password", (req, res) => res.render("forgot-password", { message: "" }));
+// Gửi email quên mật khẩu
 router.post("/forgot-password", forgotPassword);
-router.get("/reset-password/:token", renderResetPassword);
+
+// Kiểm tra token reset mật khẩu
+router.get("/reset-password/:token", verifyResetToken);
+
+// Cập nhật mật khẩu mới
 router.post("/reset-password/:token", resetPassword);
 
 export default router;

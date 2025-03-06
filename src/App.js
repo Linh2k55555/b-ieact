@@ -10,6 +10,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import ManageProducts from './components/ManageProductsAdmin.js';
 import AdminOrders from './components/AdminOrder.js';
 import CheckOut from './components/CheckOut.js';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 function App() {
   // eslint-disable-next-line
   const [userData, setUserData] = useState(null);
@@ -30,6 +32,8 @@ function App() {
         <Route path="/admin/manage-products" element={<ManageProducts />} />
          <Route path="/admin/orders" element={<AdminOrders />} />
          <Route path="/checkout" element={<CheckOut />} />
+        < Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </Router>
   );

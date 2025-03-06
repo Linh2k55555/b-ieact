@@ -13,8 +13,6 @@ import updateUserRouter from "./updateuser/router.js";
 import adminRouter from "./admin/router.js";
 import cartRouter from './cart/router.js';
 import transactionRoutes from './transaction/router.js';
-import checkoutGuestRoutes from './guest/routercheckout.js';
-import guestCartRouter from './guest/routerCart.js';
 import forgotPasswordRouter from "./forgotpassword/router.js";
 import cors from 'cors';  // Cài đặt CORS
 import xlsx from "xlsx";
@@ -72,8 +70,6 @@ app.use("/api", updateUserRouter); // Cập nhật thông tin người dùng
 app.use("/admin", adminRouter); // Quản trị viên
 app.use("/api/cart", cartRouter); // Giỏ hàng
 app.use('/transactions', transactionRoutes); // Lịch sử giao dịch
-app.use('/checkout/guest', checkoutGuestRoutes); // Thanh toán khách hàng chưa đăng nhập
-app.use('/guest-cart', guestCartRouter); // Giỏ hàng khách hàng chưa đăng nhập
 app.use("/", forgotPasswordRouter); // Quên mật khẩu
 
 // Trang home (nếu có)

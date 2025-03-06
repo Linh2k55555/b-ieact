@@ -1,18 +1,47 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Dùng để điều hướng
+import axios from 'axios';
 import '../css/Products.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Kiểm tra đăng nhập
+  const navigate = useNavigate();
 
+  // Lấy danh sách sản phẩm từ backend
   useEffect(() => {
     fetch('/api/products')
       .then(response => response.json())
       .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
+      .catch(error => console.error('Lỗi khi lấy sản phẩm:', error));
+
+    // Kiểm tra trạng thái đăng nhập
+    axios.get('/api/auth/check', { withCredentials: true })
+      .then(response => {
+        setIsAuthenticated(response.data.isAuthenticated);
+      })
+      .catch(error => {
+        console.error('Lỗi kiểm tra đăng nhập:', error);
+        setIsAuthenticated(false);
+      });
   }, []);
 
-  const addToCart = (productId, price, name) => {
-    // Add to cart logic here
+  // Xử lý thêm vào giỏ hàng
+  const addToCart = async (productId, price, name) => {
+    if (!isAuthenticated) {
+      if (window.confirm("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập ngay không?")) {
+        navigate('/signin'); // Điều hướng đến trang đăng nhập
+      }
+      return;
+    }
+
+    try {
+      const response = await axios.post('/api/cart/add', { productId, price, name }, { withCredentials: true });
+      alert(response.data.message || 'Sản phẩm đã được thêm vào giỏ hàng!');
+    } catch (error) {
+      console.error('Lỗi khi thêm vào giỏ hàng:', error);
+      alert('Lỗi khi thêm vào giỏ hàng. Vui lòng thử lại.');
+    }
   };
 
   return (
