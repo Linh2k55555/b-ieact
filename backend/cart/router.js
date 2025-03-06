@@ -11,6 +11,7 @@ router.get("/", isAuthenticated, getCart);
 router.post("/add", isAuthenticated, addToCart);
 
 // Xóa sản phẩm khỏi giỏ hàng
-router.delete("/remove", isAuthenticated, removeFromCart);
+router.delete("/remove/:productId", isAuthenticated, removeFromCart);
+
 
 export default router;

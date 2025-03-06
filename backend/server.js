@@ -150,6 +150,16 @@ app.get("/api/districts/:cityId", (req, res) => {
 
   res.json(filteredDistricts);
 });
+app.get("/api/wards/:districtId", (req, res) => {
+  const districtId = parseInt(req.params.districtId);
+  const filteredWards = wards.filter(ward => ward.districtId === districtId);
+
+  if (!filteredWards.length) {
+    return res.status(404).json({ message: "Không tìm thấy phường/xã cho quận/huyện này" });
+  }
+
+  res.json({ wards: filteredWards });
+});
 
 // Khởi chạy server
 const PORT = process.env.PORT || 8080;
