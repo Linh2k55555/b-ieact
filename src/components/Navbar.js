@@ -27,9 +27,6 @@ const Navbar = () => {
           <a href="#menu">Menu</a>
           <Link to="/signin" className="auth-btn">Đăng nhập</Link>
           <Link to="/signup" className="auth-btn">Đăng ký</Link>
-          <button id="cart-toggle" className="cart-button">
-            <i className="fas fa-shopping-cart"></i>
-          </button>
         </div>
       </div>
     </nav>

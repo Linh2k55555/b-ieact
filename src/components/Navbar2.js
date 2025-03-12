@@ -61,7 +61,7 @@ const Navbar2 = () => {
                 <ul className={`dropdown-menu ${dropdownOpen ? 'show' : ''}`}>
                   <Link className="dropdown-item" to="/update-password">Đổi mật khẩu</Link>
                   <Link className="dropdown-item" to="/user/update-user">Đổi thông tin</Link>
-                  <Link className="dropdown-item" to="/transactions/history">Lịch sử giao dịch</Link>
+                  <Link className="dropdown-item" to="/transactions">Lịch sử giao dịch</Link>
                   <div className="dropdown-divider"></div>
                   <button className="dropdown-item" onClick={handleLogout}>Đăng xuất</button>
                 </ul>

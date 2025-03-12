@@ -12,6 +12,7 @@ import AdminOrders from './components/AdminOrder.js';
 import CheckOut from './components/CheckOut.js';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import TransactionHistory from './components/transactions'; 
 function App() {
   // eslint-disable-next-line
   const [userData, setUserData] = useState(null);
@@ -34,6 +35,7 @@ function App() {
          <Route path="/checkout" element={<CheckOut />} />
         < Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/transactions" element={<TransactionHistory />} />
       </Routes>
     </Router>
   );

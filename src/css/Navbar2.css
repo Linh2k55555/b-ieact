@@ -8,10 +8,7 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.navbar.scrolled {
-  background: linear-gradient(135deg, #5a60d1, #7a3ea1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+
 
 .nav-container {
   max-width: 1200px;
