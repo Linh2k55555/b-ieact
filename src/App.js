@@ -4,7 +4,7 @@ import Home1 from './pages/Home';
 import Home2 from './pages/home2'; // Ensure correct casing for file name
 import Login from './components/Login';
 import Signup from './components/Signup';
-import UpdateUser from './components/UpdateUser';
+import UpdateUser from './components/UpdateUser.js';
 import UpdatePassword from './components/UpdatePassword';
 import AdminDashboard from './pages/AdminDashboard';
 import ManageProducts from './components/ManageProductsAdmin.js';

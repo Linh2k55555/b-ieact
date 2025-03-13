@@ -1,4 +1,88 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+
+const Container = styled.div`
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+`;
+
+const StatusBadge = styled.span`
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+  background-color: ${({ status }) => 
+    status === "Đang giao" ? "#f39c12" :
+    status === "Đã giao" ? "#2ecc71" :
+    status === "Đã hủy" ? "#e74c3c" :
+    "#3498db"};
+`;
+
+const CancelButton = styled.button`
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #c0392b;
+  }
+
+  &:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+  }
+`;
+
+const Message = styled.p`
+  font-size: 1rem;
+  color: #555;
+`;
+
+const BackButton = styled.a`
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #3498db;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover {
+    background: #2980b9;
+  }
+`;
 
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState([]);
@@ -16,7 +100,6 @@ const TransactionHistory = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Lỗi khi lấy lịch sử:", err);
         setError(err.message);
         setLoading(false);
       });
@@ -46,21 +129,21 @@ const TransactionHistory = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Lịch sử giao dịch</h1>
+    <Container>
+      <Title>Lịch sử giao dịch</Title>
 
       {loading ? (
-        <p>Đang tải dữ liệu...</p>
+        <Message>Đang tải dữ liệu...</Message>
       ) : error ? (
-        <p style={{ color: "red" }}>{error}</p>
+        <Message style={{ color: "red" }}>{error}</Message>
       ) : transactions.length > 0 ? (
-        <table>
+        <Table>
           <thead>
             <tr>
               <th>Ngày</th>
               <th>Tổng tiền</th>
               <th>Địa chỉ</th>
-              <th>Phương thức thanh toán</th>
+              <th>Thanh toán</th>
               <th>Trạng thái</th>
               <th>Thao tác</th>
             </tr>
@@ -86,35 +169,25 @@ const TransactionHistory = () => {
                     : "Chuyển khoản"}
                 </td>
                 <td>
-                  <span
-                    className={`status-badge status-${transaction.status
-                      .replace(/\s+/g, "-")
-                      .toLowerCase()}`}
-                  >
-                    {transaction.status}
-                  </span>
+                  <StatusBadge status={transaction.status}>{transaction.status}</StatusBadge>
                 </td>
                 <td>
                   {["Đang giao", "Đã giao", "Đã hủy"].includes(transaction.status) ? (
-                    <span style={{ color: "#95a5a6" }}>Không thể hủy</span>
+                    <CancelButton disabled>Không thể hủy</CancelButton>
                   ) : (
-                    <button onClick={() => cancelOrder(transaction._id)} className="cancel-btn">
-                      Hủy đơn
-                    </button>
+                    <CancelButton onClick={() => cancelOrder(transaction._id)}>Hủy đơn</CancelButton>
                   )}
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       ) : (
-        <p className="empty-message">Không có lịch sử giao dịch nào.</p>
+        <Message>Không có lịch sử giao dịch nào.</Message>
       )}
 
-      <a href="/home2" className="back-btn">
-        Trở về trang chủ
-      </a>
-    </div>
+      <BackButton href="/home2">Trở về trang chủ</BackButton>
+    </Container>
   );
 };
 

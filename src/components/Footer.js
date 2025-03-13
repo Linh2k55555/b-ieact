@@ -1,40 +1,111 @@
-import React from 'react';
-import '../css/Footer.css';
+import React from "react";
+import styled from "styled-components";
+
+// 🎨 Styled Components
+const FooterContainer = styled.footer`
+  background: #2c3e50;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+`;
+
+const FooterContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1000px;
+  margin: 0 auto;
+`;
+
+const FooterSection = styled.div`
+  flex: 1;
+  min-width: 250px;
+  margin: 20px 0;
+  text-align: left;
+
+  h4 {
+    color: #f39c12;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  a {
+    display: block;
+    color: #ecf0f1;
+    text-decoration: none;
+    margin: 5px 0;
+    &:hover {
+      color: #f39c12;
+    }
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: 10px;
+  
+  a {
+    font-size: 20px;
+    color: white;
+    transition: 0.3s;
+    &:hover {
+      color: #f39c12;
+    }
+  }
+`;
+
+const Copyright = styled.div`
+  margin-top: 20px;
+  border-top: 1px solid #555;
+  padding-top: 10px;
+  font-size: 14px;
+  color: #bbb;
+`;
 
 const Footer = () => {
   return (
-    <footer>
-      <div className="footer-content">
-        <div className="footer-section">
+    <FooterContainer>
+      <FooterContent>
+        <FooterSection>
           <h4>Về Coffee House</h4>
-          <p>Chúng tôi là điểm đến lý tưởng cho những người yêu thích cà phê chất lượng cao và không gian ấm cúng.</p>
-        </div>
-        <div className="footer-section">
+          <p>
+            Chúng tôi là điểm đến lý tưởng cho những người yêu thích cà phê chất lượng cao và không gian ấm cúng.
+          </p>
+        </FooterSection>
+
+        <FooterSection>
           <h4>Liên kết nhanh</h4>
           <a href="/">Trang chủ</a>
           <a href="#menu">Menu</a>
           <a href="#about">Về chúng tôi</a>
           <a href="#contact">Liên hệ</a>
-        </div>
-        <div className="footer-section">
+        </FooterSection>
+
+        <FooterSection>
           <h4>Liên hệ</h4>
-          <p>Địa chỉ: 123 Đường ABC, Quận XYZ</p>
-          <p>Email: info@coffeehouse.com</p>
-          <p>Điện thoại: (084) 123 456 789</p>
-        </div>
-        <div className="footer-section">
+          <p>📍 Địa chỉ: 123 Đường ABC, Quận XYZ</p>
+          <p>📧 Email: info@coffeehouse.com</p>
+          <p>📞 Điện thoại: (084) 123 456 789</p>
+        </FooterSection>
+
+        <FooterSection>
           <h4>Theo dõi chúng tôi</h4>
-          <div className="social-links">
+          <SocialLinks>
             <a href="https://www.facebook.com"><i className="fab fa-facebook"></i></a>
             <a href="https://www.instagram.com"><i className="fab fa-instagram"></i></a>
             <a href="https://www.twitter.com"><i className="fab fa-twitter"></i></a>
-          </div>
-        </div>
-      </div>
-      <div className="copyright">
+          </SocialLinks>
+        </FooterSection>
+      </FooterContent>
+      
+      <Copyright>
         <p>&copy; 2024 Coffee House. All rights reserved.</p>
-      </div>
-    </footer>
+      </Copyright>
+    </FooterContainer>
   );
 };
 

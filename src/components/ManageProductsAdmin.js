@@ -1,5 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import '../css/ManageProducts.css';
+import styled from 'styled-components';
+
+const AdminContainer = styled.div`
+  padding: 20px;
+  font-family: Arial, sans-serif;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 2px solid #ddd;
+`;
+
+const Button = styled.button`
+  background-color: ${(props) => (props.delete ? '#ff4d4d' : '#007bff')};
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: ${(props) => (props.delete ? '#cc0000' : '#0056b3')};
+  }
+`;
+
+const Container = styled.div`
+  max-width: 900px;
+  margin: auto;
+`;
+
+const FormContainer = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+`;
+
+const ProductList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+`;
+
+const ProductItem = styled.div`
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  width: 48%;
+  background: #fff;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const ProductImage = styled.img`
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+`;
+
+const LoadingText = styled.p`
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+`;
 
 const ManageProductsAdmin = () => {
   const [products, setProducts] = useState([]);
@@ -33,18 +118,6 @@ const ManageProductsAdmin = () => {
     fetchProducts();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('/logout', { method: 'GET', credentials: 'include' });
-      if (response.status === 200) {
-        window.alert('Đăng xuất thành công!');
-        window.location.href = '/signin';
-      }
-    } catch (error) {
-      window.alert('Có lỗi xảy ra trong khi đăng xuất!');
-    }
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({ ...prev, [name]: value }));
@@ -74,7 +147,7 @@ const ManageProductsAdmin = () => {
 
       const data = await response.json();
       window.alert('Sản phẩm đã được thêm thành công!');
-      
+
       setNewProduct({ name: '', price: '', description: '', image: null });
       setProducts((prev) => [data.product, ...prev]); 
     } catch (error) {
@@ -102,79 +175,62 @@ const ManageProductsAdmin = () => {
   };
 
   return (
-    <div className="admin-products-container">
-      <header>
+    <AdminContainer>
+      <Header>
         <h1>Quản lý sản phẩm</h1>
-        <div className="action-buttons">
-          <button onClick={handleLogout}>Đăng xuất</button>
-          <a href="/admin/manage-products" className="btn-manage-products">Quản lý sản phẩm</a>
-          <a href="/admin/orders" className="btn-manage-orders">Quản lý đơn hàng</a>
-        </div>
-      </header>
+        <Button onClick={() => window.location.href = '/signin'}>Đăng xuất</Button>
+      </Header>
 
-      <div className="container">
-        <div className="form-container">
+      <Container>
+        <FormContainer>
           <h2>Thêm sản phẩm mới</h2>
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <FormGroup>
               <label>Tên sản phẩm</label>
               <input type="text" name="name" value={newProduct.name} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
+            </FormGroup>
+            <FormGroup>
               <label>Giá sản phẩm</label>
               <input type="number" name="price" value={newProduct.price} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
+            </FormGroup>
+            <FormGroup>
               <label>Mô tả sản phẩm</label>
               <textarea name="description" value={newProduct.description} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
+            </FormGroup>
+            <FormGroup>
               <label>Hình ảnh sản phẩm</label>
               <input type="file" name="image" onChange={handleImageChange} accept="image/*" required />
-            </div>
-            <button type="submit">Thêm sản phẩm</button>
+            </FormGroup>
+            <Button type="submit">Thêm sản phẩm</Button>
           </form>
-        </div>
+        </FormContainer>
 
         <h2>Danh sách sản phẩm</h2>
         {loading ? (
-          <p className="loading">Đang tải sản phẩm...</p>
+          <LoadingText>Đang tải sản phẩm...</LoadingText>
         ) : (
-          <div className="product-list">
+          <ProductList>
             {products.length > 0 ? (
               products.map((product) => (
-                <div key={product._id} className="product-item">
+                <ProductItem key={product._id}>
                   {product.image ? (
-                    <img
-                      src={`data:image/jpeg;base64,${product.image}`}
-                      alt={product.name}
-                      className="product-image"
-                    />
+                    <ProductImage src={`data:image/jpeg;base64,${product.image}`} alt={product.name} />
                   ) : (
                     <p>Không có hình ảnh</p>
                   )}
-                  <div className="product-details">
-                    <h3>{product.name}</h3>
-                    <p>
-                      Giá: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-                    </p>
-                    <p>Mô tả: {product.description}</p>
-                  </div>
-
-                  <div className="action-buttons">
-                    <button onClick={() => handleDelete(product._id)} className="btn-delete">
-                      <i className="fas fa-trash"></i> Xóa
-                    </button>
-                  </div>
-                </div>
+                  <h3>{product.name}</h3>
+                  <p>Giá: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}</p>
+                  <p>{product.description}</p>
+                  <Button delete onClick={() => handleDelete(product._id)}>Xóa</Button>
+                </ProductItem>
               ))
             ) : (
               <p>Không có sản phẩm nào.</p>
             )}
-          </div>
+          </ProductList>
         )}
-      </div>
-    </div>
+      </Container>
+    </AdminContainer>
   );
 };
 

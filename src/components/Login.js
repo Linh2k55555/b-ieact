@@ -1,6 +1,76 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../css/login.css';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+`;
+
+const FormWrapper = styled.div`
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px;
+`;
+
+const Title = styled.h1`
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+
+  input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 16px;
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: ${(props) => (props.disabled ? "#ccc" : "#007bff")};
+  border: none;
+  border-radius: 5px;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  transition: background 0.3s;
+
+  &:hover {
+    background: ${(props) => (props.disabled ? "#ccc" : "#0056b3")};
+  }
+`;
+
+const ExtraLinks = styled.div`
+  margin-top: 15px;
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+`;
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -38,43 +108,43 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Đăng nhập</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="input-group">
-          <i className="fas fa-envelope"></i>
-          <input
-            type="email"
-            name="email"
-            placeholder="Nhập email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+    <Container>
+      <FormWrapper>
+        <Title>Đăng nhập</Title>
+        <form onSubmit={handleSubmit}>
+          <InputGroup>
+            <input
+              type="email"
+              name="email"
+              placeholder="Nhập email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-        <div className="input-group">
-          <i className="fas fa-lock"></i>
-          <input
-            type="password"
-            name="password"
-            placeholder="Nhập mật khẩu"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+          <InputGroup>
+            <input
+              type="password"
+              name="password"
+              placeholder="Nhập mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
-        </button>
-      </form>
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          </Button>
+        </form>
 
-      <div className="extra-links">
-        <p><a href="/forgot-password">Quên mật khẩu?</a></p>
-        <p>Bạn chưa có tài khoản? <a href="/signup">Đăng ký</a></p>
-      </div>
-    </div>
+        <ExtraLinks>
+          <p><a href="/forgot-password">Quên mật khẩu?</a></p>
+          <p>Bạn chưa có tài khoản? <a href="/signup">Đăng ký</a></p>
+        </ExtraLinks>
+      </FormWrapper>
+    </Container>
   );
 };
 
