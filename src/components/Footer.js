@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 // 🎨 Styled Components
 const FooterContainer = styled.footer`
@@ -47,13 +48,14 @@ const FooterSection = styled.div`
 const SocialLinks = styled.div`
   display: flex;
   gap: 10px;
-  
+
   a {
-    font-size: 20px;
-    color: white;
+    font-size: 1.5rem;
+    color: #ccc;
     transition: 0.3s;
+    
     &:hover {
-      color: #f39c12;
+      color: white;
     }
   }
 `;
@@ -95,13 +97,19 @@ const Footer = () => {
         <FooterSection>
           <h4>Theo dõi chúng tôi</h4>
           <SocialLinks>
-            <a href="https://www.facebook.com"><i className="fab fa-facebook"></i></a>
-            <a href="https://www.instagram.com"><i className="fab fa-instagram"></i></a>
-            <a href="https://www.twitter.com"><i className="fab fa-twitter"></i></a>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+              <i className="bi bi-facebook"></i>
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+              <i className="bi bi-instagram"></i>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
+              <i className="bi bi-twitter"></i>
+            </a>
           </SocialLinks>
         </FooterSection>
       </FooterContent>
-      
+
       <Copyright>
         <p>&copy; 2024 Coffee House. All rights reserved.</p>
       </Copyright>

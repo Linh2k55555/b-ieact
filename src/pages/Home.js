@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Navbar = styled.nav`
   position: fixed;
@@ -26,18 +27,23 @@ const Logo = styled(Link)`
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 10px; /* Giảm khoảng cách giữa các mục */
+  
   a {
     color: white;
     text-decoration: none;
-    padding: 8px 12px;
+    padding: 5px 10px; /* Giảm padding để không bị tràn */
+    font-size: 0.95rem; /* Giảm font chữ nếu cần */
     transition: 0.3s;
+    
     &:hover {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 5px;
     }
   }
 `;
+
 
 const Carousel = styled.div`
   height: 450px;
@@ -154,6 +160,7 @@ const SocialLinks = styled.div`
     font-size: 1.5rem;
     color: #ccc;
     transition: 0.3s;
+    
     &:hover {
       color: white;
     }
@@ -229,7 +236,7 @@ const HomePage = () => {
         </NavLinks>
       </Navbar>
 
-      {/* Banner */}
+      {/* Banner */} 
       <Carousel>
         {slides.map((slide, index) => (
           <CarouselItem key={index} active={index === currentIndex} style={{ backgroundImage: `url(${slide.image})` }}>
@@ -259,7 +266,6 @@ const HomePage = () => {
       </ProductsSection>
 
       {/* Footer */}
-      {/* Footer */}
       <FooterContainer>
         <FooterContent>
           <FooterSection>
@@ -285,10 +291,10 @@ const HomePage = () => {
           <FooterSection>
             <h4>Theo dõi chúng tôi</h4>
             <SocialLinks>
-              <a href="https://www.facebook.com"><i className="fab fa-facebook"></i></a>
-              <a href="https://www.instagram.com"><i className="fab fa-instagram"></i></a>
-              <a href="https://www.twitter.com"><i className="fab fa-twitter"></i></a>
-            </SocialLinks>
+  <a href="https://www.facebook.com"><i className="bi bi-facebook"></i></a>
+  <a href="https://www.instagram.com"><i className="bi bi-instagram"></i></a>
+  <a href="https://www.twitter.com"><i className="bi bi-twitter"></i></a>
+</SocialLinks>
           </FooterSection>
         </FooterContent>
 

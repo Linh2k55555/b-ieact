@@ -127,6 +127,8 @@ const AdminOrders = () => {
       <Header>
         <Title>Quản lý đơn hàng</Title>
         <Button onClick={handleLogout}>Đăng xuất</Button>
+          <Button href="/admin/manage-products" primary>Quản lý sản phẩm</Button>
+          <Button href="/admin/orders">Quản lý đơn hàng</Button>
       </Header>
 
       {message && <p>{message}</p>}

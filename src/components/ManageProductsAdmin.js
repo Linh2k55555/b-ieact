@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AdminContainer = styled.div`
   padding: 20px;
@@ -95,6 +97,7 @@ const ManageProductsAdmin = () => {
     description: '',
     image: null,
   });
+   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -174,11 +177,25 @@ const ManageProductsAdmin = () => {
     }
   };
 
+const handleLogout = async () => {
+    try {
+      const response = await axios.get('/logout');
+      if (response.status === 200) {
+        navigate('/');
+        alert('Đăng xuất thành công!');
+      }
+    } catch (error) {
+      alert('Có lỗi xảy ra trong khi đăng xuất!');
+    }
+  };
+
   return (
     <AdminContainer>
       <Header>
         <h1>Quản lý sản phẩm</h1>
-        <Button onClick={() => window.location.href = '/signin'}>Đăng xuất</Button>
+        <Button onClick={handleLogout}>Đăng xuất</Button>
+          <Button href="/admin/manage-products" primary>Quản lý sản phẩm</Button>
+          <Button href="/admin/orders">Quản lý đơn hàng</Button>
       </Header>
 
       <Container>

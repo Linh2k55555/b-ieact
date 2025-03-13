@@ -1,65 +1,75 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-// Styled Components
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #f4f4f4;
 `;
 
 const FormWrapper = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 100%;
-  max-width: 400px;
-  color: white;
+  width: 400px;
 `;
 
 const Title = styled.h1`
-  font-size: 1.8rem;
+  color: #333;
   margin-bottom: 20px;
 `;
 
-const Input = styled.input`
-  width: 100%;
-  padding: 12px;
+const InputGroup = styled.div`
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
   margin-bottom: 15px;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.9);
+
+  input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font-size: 16px;
+    outline: none;
+  }
 `;
 
 const Button = styled.button`
   width: 100%;
   padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 16px;
   font-weight: bold;
-  cursor: pointer;
-  background: linear-gradient(45deg, #667eea, #764ba2);
   color: white;
-  transition: all 0.3s ease;
+  background: ${(props) => (props.disabled ? "#ccc" : "#007bff")};
+  border: none;
+  border-radius: 5px;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  transition: background 0.3s;
 
   &:hover {
-    background: linear-gradient(45deg, #764ba2, #667eea);
-    transform: scale(1.05);
+    background: ${(props) => (props.disabled ? "#ccc" : "#0056b3")};
   }
 `;
 
-const Message = styled.p`
-  font-size: 1rem;
+const ExtraLinks = styled.div`
   margin-top: 15px;
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
 `;
 
 const Signup = () => {
@@ -68,12 +78,11 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [age, setAge] = useState("");
-  const [errors, setErrors] = useState([]);
-
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       await axios.post("http://localhost:8080/api/signup", {
@@ -83,20 +92,13 @@ const Signup = () => {
         confirmPassword,
         age,
       });
-
+      
       window.alert("Đăng ký thành công! Đang chuyển hướng...");
-
-      setTimeout(() => {
-        navigate("/signin");
-      }, 2000);
+      window.location.href = "/signin";
     } catch (error) {
-      if (error.response) {
-        window.alert(error.response.data.message || "Đã có lỗi xảy ra.");
-        setErrors([error.response.data.message]);
-      } else {
-        window.alert("Không thể kết nối với server.");
-        setErrors([]);
-      }
+      window.alert(error.response?.data?.message || "Đã có lỗi xảy ra.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,64 +106,65 @@ const Signup = () => {
     <Container>
       <FormWrapper>
         <Title>Đăng ký</Title>
-
-        {errors.length > 0 && (
-          <Message>
-            <ul>
-              {errors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </Message>
-        )}
-
         <form onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            placeholder="Nhập tên người dùng"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          <InputGroup>
+            <input
+              type="text"
+              placeholder="Nhập tên người dùng"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-          <Input
-            type="email"
-            placeholder="Nhập email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <InputGroup>
+            <input
+              type="email"
+              placeholder="Nhập email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-          <Input
-            type="password"
-            placeholder="Nhập mật khẩu"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <InputGroup>
+            <input
+              type="password"
+              placeholder="Nhập mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-          <Input
-            type="password"
-            placeholder="Xác nhận mật khẩu"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <InputGroup>
+            <input
+              type="password"
+              placeholder="Xác nhận mật khẩu"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-          <Input
-            type="number"
-            placeholder="Nhập tuổi"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            required
-          />
+          <InputGroup>
+            <input
+              type="number"
+              placeholder="Nhập tuổi"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              required
+            />
+          </InputGroup>
 
-          <Button type="submit">Đăng ký</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Đang đăng ký..." : "Đăng ký"}
+          </Button>
         </form>
 
-        <Message>
-          Bạn đã có tài khoản? <a href="/signin">Đăng nhập</a>
-        </Message>
+        <ExtraLinks>
+          <p>Bạn đã có tài khoản? <a href="/signin">Đăng nhập</a></p>
+        </ExtraLinks>
       </FormWrapper>
     </Container>
   );
