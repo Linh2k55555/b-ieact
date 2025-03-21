@@ -64,6 +64,11 @@ const Select = styled.select`
   border-radius: 5px;
 `;
 
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [message, setMessage] = useState("");
@@ -126,9 +131,11 @@ const AdminOrders = () => {
     <Container>
       <Header>
         <Title>Quản lý đơn hàng</Title>
+        <ActionButtons>
         <Button onClick={handleLogout}>Đăng xuất</Button>
-          <Button href="/admin/manage-products" primary>Quản lý sản phẩm</Button>
-          <Button href="/admin/orders">Quản lý đơn hàng</Button>
+        <Button onClick={() => navigate('/admin')}>Danh sách sản phẩm</Button>      
+        <Button onClick={() => navigate('/admin/manage-products')}>Quản lý sản phẩm</Button>
+         </ActionButtons>
       </Header>
 
       {message && <p>{message}</p>}

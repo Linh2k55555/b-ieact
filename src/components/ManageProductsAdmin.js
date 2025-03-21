@@ -88,6 +88,12 @@ const LoadingText = styled.p`
   color: #666;
 `;
 
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+
 const ManageProductsAdmin = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -140,7 +146,7 @@ const ManageProductsAdmin = () => {
     formData.append('image', newProduct.image);
 
     try {
-      const response = await fetch('http://localhost:8080/admin/products', {
+      const response = await fetch('http://localhost:8080/admin/products/add', {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -193,9 +199,11 @@ const handleLogout = async () => {
     <AdminContainer>
       <Header>
         <h1>Quản lý sản phẩm</h1>
+        <ActionButtons>
         <Button onClick={handleLogout}>Đăng xuất</Button>
-          <Button href="/admin/manage-products" primary>Quản lý sản phẩm</Button>
-          <Button href="/admin/orders">Quản lý đơn hàng</Button>
+        <Button onClick={() => navigate('/admin')}>Danh sách sản phẩm</Button>      
+        <Button onClick={() => navigate('/admin/orders')}>Quản lý đơn hàng</Button>
+        </ActionButtons>
       </Header>
 
       <Container>

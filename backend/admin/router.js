@@ -18,7 +18,7 @@ const router = express.Router();
 // Route: Trang quản lý sản phẩm
 
 // Route: Thêm sản phẩm mới
-router.post("/products", isAdmin, upload.single("image"), addProduct);
+router.post("/products/add", isAdmin, upload.single("image"), addProduct);
 
 // Route: Cập nhật sản phẩm
 router.post("/products/:id", isAdmin, upload.single("image"), updateProduct);

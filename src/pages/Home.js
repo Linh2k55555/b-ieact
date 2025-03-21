@@ -28,13 +28,13 @@ const Logo = styled(Link)`
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px; /* Giảm khoảng cách giữa các mục */
+  gap: 5px; 
   
   a {
     color: white;
     text-decoration: none;
-    padding: 5px 10px; /* Giảm padding để không bị tràn */
-    font-size: 0.95rem; /* Giảm font chữ nếu cần */
+    padding: 5px 10px; 
+    font-size: 0.95rem; 
     transition: 0.3s;
     
     &:hover {
@@ -222,7 +222,15 @@ const HomePage = () => {
     axios.get("/api/products").then((res) => setProducts(res.data));
     axios.get("/api/auth/check", { withCredentials: true }).then((res) => setIsAuthenticated(res.data.isAuthenticated));
   }, [setIsAuthenticated]);
-  
+  const handleAddToCart = (product) => {
+    if (!isAuthenticated) {
+      alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
+      return;
+    }
+    
+    // Thực hiện hành động thêm vào giỏ hàng nếu đã đăng nhập
+    alert(`Đã thêm ${product.name} vào giỏ hàng!`);
+  };
   return (
     <div>
       {/* Navbar */}
@@ -253,16 +261,18 @@ const HomePage = () => {
       <ProductsSection id="menu">
         <h2>Menu của chúng tôi</h2>
         <ProductsGrid>
-          {products.map((product) => (
-            <ProductCard key={product._id}>
-              <ProductImage src={`data:image/jpeg;base64,${product.image}`} alt={product.name} />
-              <h3>{product.name}</h3>
-              <p>{product.description}</p>
-              <p>{product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</p>
-              <Button onClick={() => alert("Thêm vào giỏ hàng")}>Thêm vào giỏ hàng</Button>
-            </ProductCard>
-          ))}
-        </ProductsGrid>
+    {products.map((product) => (
+      <ProductCard key={product._id}>
+        <ProductImage src={`data:image/jpeg;base64,${product.image}`} alt={product.name} />
+        <h3>{product.name}</h3>
+        <p>{product.description}</p>
+        <p>{product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</p>
+        <Button onClick={() => handleAddToCart(product)}>Thêm vào giỏ hàng</Button>
+      </ProductCard>
+    ))}
+  </ProductsGrid>
+);
+
       </ProductsSection>
 
       {/* Footer */}
